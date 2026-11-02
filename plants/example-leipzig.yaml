@@ -1,0 +1,14 @@
+# PV plant description for `ewf forecast --plant <file>`.
+# A file can also hold several plants under a `plants:` list.
+name: Example Leipzig
+latitude: 51.424
+longitude: 12.236
+altitude_m: 140
+capacity_dc_kwp: 10000      # module power at STC
+capacity_ac_kw: 7700        # inverter limit (leave out for no clipping)
+tracking: fixed             # fixed or single_axis
+tilt_deg: 20
+azimuth_deg: 180            # 180 = south, 90 = east, 270 = west
+gamma_pdc_per_k: -0.0035    # module temperature coefficient
+system_losses_pct: 10       # soiling, mismatch, wiring, availability
+timezone: Europe/Berlin

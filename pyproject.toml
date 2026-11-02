@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ewf"
+version = "0.1.0"
+description = "PV power forecasts from open weather-model data (ECMWF IFS, ECMWF AIFS, NOAA GFS)"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Emil Mierza" }]
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.26",
+  "pandas>=2.1",
+  "requests>=2.31",
+  "eccodes>=2.37",
+  "pvlib>=0.11",
+  "h5py>=3.9",
+  "pyyaml>=6",
+  "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+app = ["streamlit>=1.35", "altair>=5"]
+dev = ["pytest>=8"]
+
+[project.scripts]
+ewf = "ewf.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["network: needs internet access to the weather-model archives (deselect with -m 'not network')"]

@@ -1,0 +1,10 @@
+# Streamlit theme in the house palette (research/STYLE_GUIDE.md)
+[theme]
+base = "light"
+primaryColor = "#2A78D6"
+backgroundColor = "#FCFCFB"
+secondaryBackgroundColor = "#F6F5F2"
+textColor = "#0B0B0B"
+
+[browser]
+gatherUsageStats = false

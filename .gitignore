@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 .venv/
+*.egg-info/
 
 # Large downloads that are re-created by `make fetch` (see each paper's data/README.md)
 research/*/data/cache/
@@ -19,3 +20,6 @@ research/*/paper/main.pdf
 research/template/*.aux
 research/template/*.log
 research/template/*.pdf
+
+# Forecast outputs
+outputs/

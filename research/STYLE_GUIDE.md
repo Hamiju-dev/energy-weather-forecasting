@@ -51,7 +51,7 @@ research/NN-short-kebab-title/
 
 - `article`, 10 pt, two columns, US letter, Times (`mathptmx`), margins as in `ewf-paper.sty`.
 - Title block with `\ewfmaketitle{title}{subtitle}{author}{affiliation}{date}{abstract}{keywords}`; abstract of 200-300 words that states the results with numbers; 5-8 keywords.
-- Sections: numbered, short noun-phrase titles. The first section states the thesis.
+- Sections: numbered, short noun-phrase titles. **The section structure follows the topic.** Paper 01 is one example (a review plus a case study); a methods paper, a data report or a short technical note will have different sections. Keep only what every paper needs: an opening that states the question and the answer, the evidence, limitations, and references.
 - Run-in paragraph heads with `\para{Heading.}`.
 - Formal results as `proposition`, `lemma`, `corollary`, `definition`, each with a proof.
 - Tables with `booktabs` (no vertical rules), caption above, first sentence of the caption in bold and phrased as the finding.
@@ -113,5 +113,5 @@ Check new palettes with a validator (the method in this guide: OKLab ΔE under M
 ## 6. Starting a new paper
 
 1. Copy `research/template/` to `research/NN-your-title/paper/` and create the other folders from section 1.
-2. Fill the title block in `main.tex`, write `sections/01-....tex` with the thesis first.
+2. Fill the title block in `main.tex` and choose sections that suit the topic; open with the question and the answer.
 3. Add a row for the paper in `research/README.md`.
