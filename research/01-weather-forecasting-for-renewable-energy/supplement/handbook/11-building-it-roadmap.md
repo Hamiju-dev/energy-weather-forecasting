@@ -78,7 +78,7 @@ If plant SCADA data becomes available (e.g. from work), the same pipeline applie
 
 ```
 energy-weather-forecasting/
-  docs/                    research notes (this folder)
+  research/                papers in the house format (see research/README.md)
   src/ewf/
     ingest/                openmeteo.py, dwd.py, ecmwf.py, smard.py, entsoe.py
     qc/                    quality control of measurements

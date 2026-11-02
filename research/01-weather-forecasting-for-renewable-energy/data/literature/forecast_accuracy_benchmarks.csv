@@ -1,0 +1,6 @@
+id,case,horizon,metric,value_low,value_high,unit,normalisation,source_key,notes
+wind_single_farm_da,Single wind farm (Germany),day-ahead,RMSE,10,15,%,installed capacity,ernst2007predicting,Representative German wind farms; older benchmark
+wind_control_area_da,German TSO control area,day-ahead,RMSE,6,7,%,installed capacity,ernst2007predicting,Aggregated from representative farms
+wind_germany_da_2007,All of Germany,day-ahead,RMSE,5,6,%,installed capacity,ernst2007predicting,
+wind_germany_da_2014,All of Germany (before and after the WINDSAGE project),day-ahead,RMSE,3.1,4.1,%,installed capacity,ubimet2016windsage,4.1 % in 2014; below 3.1 % after the project
+pv_aggregation_gain,152 PV systems in Utrecht: aggregate vs individual,day-ahead,MAE reduction,18,,%,relative,visser2022aggregated,At least 18 % lower MAE and 20 % lower RMSE for every model tested

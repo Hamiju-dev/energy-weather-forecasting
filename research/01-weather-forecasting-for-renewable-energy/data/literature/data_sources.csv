@@ -1,0 +1,27 @@
+category,name,provider,content,coverage,access,licence_commercial_use,url
+Real-time NWP,ECMWF open data,ECMWF,IFS and AIFS forecasts (deterministic and ensemble),global 0.25 deg,HTTP; AWS/Azure/Google mirrors,yes (CC-BY-4.0),https://www.ecmwf.int/en/forecasts/datasets/open-data
+Real-time NWP,GFS / GEFS / AIGFS,NOAA,global forecasts and ensembles,global 0.25 deg,NOMADS; AWS and Google Cloud,yes (public domain),https://www.nco.ncep.noaa.gov/pmb/products/gfs/
+Real-time NWP,ICON / ICON-EU / ICON-D2 / MOSMIX,DWD,model fields and station point forecasts,global to Germany 2 km,opendata.dwd.de (files kept about 24 h),yes (attribution),https://opendata.dwd.de/weather/
+Real-time NWP,AROME / ARPEGE,Meteo-France,regional forecasts,France / Europe,meteo.data.gouv.fr,yes (Etalab),https://meteo.data.gouv.fr
+Real-time NWP,MEPS / Locationforecast,MET Norway,regional forecasts and point API,Nordics / global points,api.met.no,yes (CC-BY-4.0),https://api.met.no
+Aerosols,CAMS global forecasts,Copernicus / ECMWF,aerosol optical depth and dust,global,Atmosphere Data Store,yes (Copernicus licence),https://ads.atmosphere.copernicus.eu
+Convenience API,Open-Meteo,Open-Meteo,forecasts; historical forecasts (2021+); previous runs (2024+); single runs; satellite radiation; ERA5,global,REST API,free tier non-commercial only,https://open-meteo.com
+Forecast archive,GFS / HRRR / GEFS reforecast archives,NOAA,past forecasts as issued,global / US,AWS and Google Cloud,yes (public domain),https://registry.opendata.aws
+Forecast archive,TIGGE,ECMWF,multi-centre ensembles since 2006,global,MARS / web,no (research only),https://www.ecmwf.int
+Reanalysis,ERA5 / ERA5-Land,ECMWF / C3S,hourly reanalysis 1940+ / land 1950+,global 0.25 / 0.1 deg,Climate Data Store,yes (Copernicus licence),https://cds.climate.copernicus.eu
+Reanalysis,CERRA / COSMO-REA6,C3S / DWD,regional reanalysis,Europe 5.5 / 6 km,CDS / DWD,yes,https://cds.climate.copernicus.eu
+Satellite irradiance,SARAH-3,EUMETSAT CM SAF,surface irradiance climate data record 1983+,Meteosat disk 0.05 deg 30 min,CM SAF web interface,yes (attribution),https://wui.cmsaf.eu
+Satellite irradiance,CAMS solar radiation time series,Copernicus,irradiance and clear-sky (McClear) 2004+,Meteosat and Himawari disks,ADS / SoDa,yes (registration),https://ads.atmosphere.copernicus.eu
+Satellite irradiance,PVGIS,EU JRC,irradiance and PV simulation (SARAH-3; ERA5),Europe; Africa; Asia,web and API,yes,https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis_en
+Satellite irradiance,NSRDB,US national laboratory (formerly NREL),irradiance 1998+,Americas and more,API key,yes,https://nsrdb.nrel.gov
+Observations,DWD Climate Data Center,DWD,station data incl. 10-min radiation,Germany,opendata.dwd.de,yes (attribution),https://opendata.dwd.de/climate_environment/CDC/
+Observations,Integrated Surface Database (ISD),NOAA NCEI,hourly station reports,global,AWS Open Data (archive to Aug 2025); NCEI,yes (public domain),https://registry.opendata.aws/noaa-isd/
+Observations,BSRN,WRMC / PANGAEA,reference radiation measurements,global stations,PANGAEA,research use with registration,https://bsrn.awi.de
+Market and system,ENTSO-E Transparency Platform,ENTSO-E,generation; load; TSO forecasts; prices; flows,Europe,web and API (token),generally yes (check terms),https://transparency.entsoe.eu
+Market and system,SMARD,Bundesnetzagentur,German generation; consumption; prices,Germany 15 min,download and JSON,yes (CC BY 4.0),https://www.smard.de
+Market and system,Energy-Charts,Fraunhofer ISE,generation; prices; capacity,Europe,web and API,yes (CC BY 4.0),https://www.energy-charts.info
+Market and system,netztransparenz.de,German TSOs,wind/solar extrapolations; market values; reBAP,Germany,downloads,yes,https://www.netztransparenz.de
+Plant data,Kelmarsh and Penmanshiel SCADA,Cubico,10-min wind turbine SCADA 2016-2024,UK wind farms,Zenodo,yes (CC-BY-4.0),https://zenodo.org/records/16807551
+Plant data,Open Climate Fix UK PV,Open Climate Fix,PV system generation,UK,HuggingFace,check terms,https://huggingface.co/openclimatefix
+Resource atlas,Global Solar Atlas / Global Wind Atlas,World Bank / DTU,long-term resource maps,global,web and download,yes (CC BY 4.0),https://globalsolaratlas.info
+Resource atlas,Renewables.ninja,Pfenninger and Staffell,simulated hourly PV and wind,global,web and API,no (CC BY-NC),https://www.renewables.ninja

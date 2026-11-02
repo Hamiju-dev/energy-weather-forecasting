@@ -1,0 +1,26 @@
+\section{Requirements by department}
+\label{sec:dept}
+
+Across the life of a plant, almost every department uses weather data, but each asks a different question (Table~\ref{tab:dept}). The question fixes the horizon, the data source and what ``accurate'' means.
+
+\input{tables/tab02-departments}
+
+\para{Development and financing.} Site selection and the energy yield assessment work from the past: 20 or more years of satellite irradiance or reanalysis, corrected to the site with on-site measurements (measure-correlate-predict for wind). The output is a long-term mean and its uncertainty, expressed as exceedance levels P50, P90 and P99 for one and ten years. Interannual variability is a major component: annual irradiation varies by roughly 3--5\,\% (one standard deviation) in Central Europe, annual wind energy by more because the power curve amplifies wind-speed variability (Proposition~\ref{prop:cubic}). Standards are still consolidating: IEC 61400-15-1 on wind site suitability appeared in 2025~\cite{iec61400-15-1}, the companion part on yield reporting was in preparation at the time of writing.
+
+\para{Engineering.} Design needs extremes rather than averages: 50-year wind speeds and gusts, snow and wind loads, hail return periods, temperature extremes for cable and inverter ratings, and high-resolution irradiance to size the ratio of DC to AC power, because hourly averages hide clipping.
+
+\para{Construction.} Forecasts protect schedule, cost and people. Daily decisions compare forecasts with activity limits: hub-height wind and gusts for turbine lifts (light, large loads such as blades are often limited to about 8--10\,m/s with conventional cranes, well below crane chart values), wave height for offshore transfers, rain and frost for earthworks and foundations, lightning for electrical work. Months ahead, hindcasts give the probability of weather windows, the consecutive hours below all limits, which feed Monte Carlo schedule simulations and contractual definitions of exceptional weather.
+
+\para{Commissioning.} PV capacity tests (IEC TS 61724-2:2025~\cite{iec61724-2}) need stable, high irradiance; wind power-curve verification (IEC 61400-12-1~\cite{iec61400-12-1}) needs enough valid data in every wind-speed bin and direction sector; grid-compliance tests often need the plant above a share of rated power. Short-range forecasts are used to choose test days, and the results are corrected to reference conditions with measured weather.
+
+\para{Operations and maintenance.} The control room uses forecasts for severe-weather alerts (storm and hail stow of trackers, icing, lightning, heat derating), crew safety, and to schedule maintenance in low-yield periods: an inverter exchange on an overcast, calm day costs a fraction of the same work on a clear one.
+
+\para{Performance analysis and lost energy.} Looking backwards, the expected output under the weather that actually occurred is compared with metered output to compute performance ratios, availability and loss breakdowns. Satellite irradiance is the independent check when on-site sensors drift. The same expected-power model values outages for insurance claims and, in Germany, the curtailed energy (\emph{Ausfallarbeit}) compensated under Redispatch~2.0~\cite{bdew2021ausfallarbeit}. Looking forwards, a forecast turns an open fault into an expected loss until repair, $\sum_t \hat P_t\,\Delta t\,\hat p_t$, which ranks repairs by money rather than by age.
+
+\para{Asset management.} Budgets distribute the long-term P50 over months; year-end re-forecasts combine year-to-date actuals with climatology and, increasingly, sub-seasonal and seasonal outlooks; revenue forecasts need capture prices rather than baseload prices (Section~\ref{sec:markets}).
+
+\para{Trading and direct marketing.} The heaviest real-time users: portfolio production in quarter-hours, refreshed with every model run, with quantiles for bidding and curtailment decisions at negative prices.
+
+\para{Grid operators.} Transmission system operators forecast and extrapolate wind and solar infeed for each control area, which the German operators publish~\cite{netztransparenz2026projection}, and use forecast uncertainty to size reserves and plan redispatch.
+
+\para{PPA structuring and risk.} Power purchase agreements transfer volume risk (how much) and shape risk (when). Pricing them needs many weather years combined with price scenarios, and attention to tail events such as long winter periods of low wind and sun.

@@ -1,6 +1,6 @@
-# Weather forecasting for renewable energy: research notes
+# Supplement: practitioner handbook
 
-Reference notes on everything that goes into a good weather-based forecasting system for renewables: what each technology and department needs, horizons, maths, methods, free data, evaluation, visualisation, and how weather drives power prices. Researched November 2026; time-sensitive facts are linked to sources in [chapter 12](12-glossary-and-reading.md#sources-used-for-the-time-sensitive-facts-in-these-notes).
+Extended, plain-language companion to the paper [Weather Forecasting for Renewable Energy](../../weather-forecasting-for-renewable-energy.pdf) (paper 01). The paper is the canonical, fully sourced version; this handbook keeps the longer explanations, checklists and examples that do not fit into a two-column paper. It was written in November 2026; time-sensitive facts are linked to sources in [chapter 12](12-glossary-and-reading.md#sources-used-for-the-time-sensitive-facts-in-these-notes) and in the paper's `data/literature/` folder.
 
 ## Chapters
 
@@ -45,4 +45,4 @@ Reference notes on everything that goes into a good weather-based forecasting sy
 
 **7. Visualise uncertainty.** Fan charts, ensemble plumes, run-to-run deltas for traders; meteograms with thresholds for operations; expected-vs-actual, carpet plots and loss waterfalls for asset management; reliability diagrams and error-by-lead-time for model work.
 
-**8. For this repo**: start with German PV (SMARD/ENTSO-E) as the target, Open-Meteo + DWD as inputs, a pvlib physical baseline, a LightGBM quantile correction, and benchmark against the TSO day-ahead forecast. See chapter 11.
+**8. For this repo**: start with German PV (SMARD/ENTSO-E) as the target, Open-Meteo + DWD as inputs, a pvlib physical baseline, a LightGBM quantile correction, and benchmark against the TSO day-ahead forecast. See chapter 11. The paper's case study (section 10) already provides a verification pipeline for three global models that the PV work can reuse.

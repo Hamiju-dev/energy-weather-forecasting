@@ -1,0 +1,20 @@
+\section{Requirements by technology}
+\label{sec:tech}
+
+Each technology converts a different part of the weather into energy, so each needs a different forecast. Table~\ref{tab:tech} summarises which variables matter; this section explains why.
+
+\input{tables/tab01-technology-variables}
+
+\para{Photovoltaics.} Output follows the irradiance on the plane of the modules (POA), reduced by module temperature, reflection, soiling, snow and the inverter limit. NWP models provide global horizontal irradiance (GHI) and often its direct and diffuse parts; a decomposition model is needed when only GHI is available, and a transposition model turns horizontal components into POA (Section~\ref{sec:foundations}). Cloud cover by level and cloud type decide most of the error: low stratus and fog absorb far more than thin cirrus. Aerosols matter more than often assumed: on 4 April 2014 the day-ahead PV forecast for Germany overestimated output by up to 5.3\,GW because Saharan dust was missing from the model~\cite{rieger2017dust}. Air temperature and wind speed set the module temperature, which costs roughly 0.3--0.4\,\% of power per kelvin above 25\,$^\circ$C for crystalline silicon. Snow can set output to zero under a clear sky, and on tracker plants gusts and hail trigger stow positions that override the irradiance forecast. Rooftop PV without telemetry appears to grid operators as reduced load, which makes irradiance an input to load forecasting as well.
+
+\para{Concentrating solar.} Uses only the direct beam (DNI), which is far more sensitive to aerosols and thin cirrus than GHI. Thermal storage makes the plant dispatchable, so the forecast feeds a dispatch optimisation.
+
+\para{Onshore wind.} Output follows the cube of hub-height wind speed between cut-in and rated speed, is flat up to cut-out, and drops to zero in storms. Hub heights of 100--170\,m lie above the 10\,m level of most observations, so shear (and its strong day-night cycle over land), veer and atmospheric stability matter. Air density changes output by several percent between summer and winter. Icing near and below 0\,$^\circ$C with fog or freezing rain causes losses and shutdowns. In Germany, permit conditions add weather-dependent curtailments that a trading forecast must reproduce: bat protection on warm, calm nights, shadow flicker on clear days, noise-reduced night modes and bird protection during harvest.
+
+\para{Offshore wind.} Adds the marine boundary layer, where low turbulence lets wakes persist for tens of kilometres, sea-surface temperature that controls stability, waves (significant wave height $H_s$ and period) that decide access and installation, and the risk of whole clusters reaching cut-out together.
+
+\para{Hydropower.} Weather acts through a catchment and with delay: precipitation, snowpack and its melt, evaporation and upstream flows. Run-of-river plants need river-flow forecasts over hours to two weeks; reservoirs need inflow over weeks to months, which is why Nordic power prices follow the hydrological balance.
+
+\para{Storage and hybrids.} Battery storage uses weather indirectly, through price forecasts (Section~\ref{sec:markets}), through the PV or wind output it shares a grid connection with, and through temperature, which drives auxiliary consumption and derating. Hybrid plants need joint forecasts that respect the correlation between technologies and the shared export limit.
+
+\para{Demand and grid.} Load depends on temperature (heating and cooling degree days), on cloudiness and on rooftop PV. Overhead-line capacity depends on wind cooling, ambient temperature and solar heating (dynamic line rating), so the windy days that create transport needs also raise capacity.

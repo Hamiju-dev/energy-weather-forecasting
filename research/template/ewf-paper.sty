@@ -1,0 +1,158 @@
+% ==========================================================================
+%  ewf-paper.sty  --  house style for research papers in this repository
+% --------------------------------------------------------------------------
+%  Layout   : two-column US letter, Times text and maths (as in the DPI paper)
+%  Colour   : colour-blind-safe categorical palette, validated for print on
+%             white (adjacent CVD dE >= 9.1, normal-vision dE >= 19.6, OKLab x100),
+%             plus a one-hue sequential ramp, a diverging pair and status colours.
+%             See research/STYLE_GUIDE.md for roles and rules.
+%  Figures  : pgfplots styles that read data straight from data/processed/*.csv
+%  Version  : 1.0 (November 2026). Each paper keeps its own copy of this file
+%             so that later style changes never alter a published paper.
+% ==========================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ewf-paper}[2026/11/02 v1.0 Energy-weather-forecasting paper style]
+
+% ---------------------------------------------------------------- page, fonts
+\RequirePackage[top=0.85in,bottom=0.9in,left=0.75in,right=0.75in,columnsep=0.28in]{geometry}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{mathptmx}
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{microtype}
+\RequirePackage{booktabs,multirow,array,tabularx}
+\RequirePackage[table]{xcolor}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,decorations.pathreplacing}
+\RequirePackage{pgfplots}
+\RequirePackage{pgfplotstable}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots,fillbetween}
+\RequirePackage[font=small,labelfont=bf,labelsep=colon]{caption}
+\RequirePackage{titlesec}
+\RequirePackage{enumitem}
+\RequirePackage{listings}
+\RequirePackage{xurl}
+\RequirePackage[numbers,sort&compress]{natbib}
+\RequirePackage{siunitx}
+\sisetup{group-separator={,},group-minimum-digits=4,detect-all}
+
+% ---------------------------------------------------------------- palette
+% Categorical slots: assign in this fixed order, never cycle past eight.
+\definecolor{ewfC1}{HTML}{2A78D6}  % blue
+\definecolor{ewfC2}{HTML}{EB6834}  % orange
+\definecolor{ewfC3}{HTML}{1BAF7A}  % aqua      (below 3:1 on white: label it)
+\definecolor{ewfC4}{HTML}{EDA100}  % yellow    (below 3:1 on white: label it)
+\definecolor{ewfC5}{HTML}{E87BA4}  % magenta   (below 3:1 on white: label it)
+\definecolor{ewfC6}{HTML}{008300}  % green
+\definecolor{ewfC7}{HTML}{6250D6}  % violet
+\definecolor{ewfC8}{HTML}{E34948}  % red
+% Sequential ramp (one hue, light -> dark) for magnitude and ordinal classes.
+\definecolor{ewfSeq100}{HTML}{CDE2FB}
+\definecolor{ewfSeq200}{HTML}{9EC5F4}
+\definecolor{ewfSeq300}{HTML}{6DA7EC}
+\definecolor{ewfSeq400}{HTML}{3987E5}
+\definecolor{ewfSeq500}{HTML}{256ABF}
+\definecolor{ewfSeq600}{HTML}{184F95}
+\definecolor{ewfSeq700}{HTML}{0D366B}
+% Diverging pair (blue <-> red) with a neutral midpoint.
+\definecolor{ewfDivNeg}{HTML}{2A78D6}
+\definecolor{ewfDivMid}{HTML}{F0EFEC}
+\definecolor{ewfDivPos}{HTML}{E34948}
+% Status (reserved meaning; always paired with a word, never colour alone).
+\definecolor{ewfGood}{HTML}{0CA30C}
+\definecolor{ewfWarning}{HTML}{FAB219}
+\definecolor{ewfSerious}{HTML}{EC835A}
+\definecolor{ewfCritical}{HTML}{D03B3B}
+% Ink and chrome.
+\definecolor{ewfInk}{HTML}{0B0B0B}
+\definecolor{ewfInkSecondary}{HTML}{52514E}
+\definecolor{ewfInkMuted}{HTML}{898781}
+\definecolor{ewfGrid}{HTML}{E1E0D9}
+\definecolor{ewfAxis}{HTML}{C3C2B7}
+\definecolor{ewfPanel}{HTML}{F6F5F2}
+
+% ---------------------------------------------------------------- headings
+\titleformat{\section}{\Large\bfseries}{\thesection}{0.8em}{}
+\titlespacing*{\section}{0pt}{2.0ex plus .5ex}{1.2ex}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing*{\subsection}{0pt}{1.4ex plus .4ex}{0.8ex}
+\newcommand{\para}[1]{\par\smallskip\noindent\textbf{#1}\hspace{0.5em}}
+
+% ---------------------------------------------------------------- theorems
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+% ---------------------------------------------------------------- lists, code
+\setlist{leftmargin=1.3em,itemsep=2pt,topsep=3pt}
+\lstset{basicstyle=\ttfamily\scriptsize,columns=fullflexible,keepspaces=true,frame=none,
+  breaklines=true,xleftmargin=0.5em,aboveskip=4pt,belowskip=4pt}
+
+% ---------------------------------------------------------------- links
+\RequirePackage[colorlinks=true,linkcolor=ewfSeq600,citecolor=ewfSeq600,urlcolor=ewfSeq600]{hyperref}
+
+% ---------------------------------------------------------------- tables
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.08}
+
+% ---------------------------------------------------------------- figures
+\pgfplotscreateplotcyclelist{ewf}{
+  {ewfC1,line width=1.1pt},{ewfC2,line width=1.1pt},{ewfC3,line width=1.1pt},
+  {ewfC4,line width=1.1pt},{ewfC5,line width=1.1pt},{ewfC6,line width=1.1pt},
+  {ewfC7,line width=1.1pt},{ewfC8,line width=1.1pt}}
+\pgfplotsset{
+  paper/.style={
+    width=\linewidth, height=5.0cm,
+    axis lines*=left, tick align=outside,
+    tick label style={font=\scriptsize,text=ewfInkSecondary},
+    label style={font=\footnotesize,text=ewfInk},
+    title style={font=\footnotesize\bfseries,text=ewfInk},
+    legend style={font=\scriptsize,draw=none,fill=white,fill opacity=0.85,text opacity=1},
+    legend cell align=left,
+    cycle list name=ewf,
+    every axis plot/.append style={line width=1.1pt},
+    grid=major, grid style={ewfGrid,line width=0.3pt},
+    axis line style={ewfAxis}, major tick style={ewfAxis},
+    scaled ticks=false,
+  },
+  % reference lines (thresholds, baselines): dashed is reserved for these
+  reference/.style={ewfInkMuted,dashed,line width=0.7pt},
+  % uncertainty band fill for a series colour
+  band/.style={draw=none,fill=#1,fill opacity=0.16},
+  % direct label at the end of a line
+  endlabel/.style={font=\scriptsize,anchor=west,inner sep=1pt},
+}
+% Keep only rows where column #1 equals the text #2 (e.g. only if={valid_hour_utc}{12}).
+\pgfplotsset{only if/.style 2 args={x filter/.append code={%
+  \getthisrow{#1}\ewftempa\edef\ewftempb{#2}%
+  \ifx\ewftempa\ewftempb\else\def\pgfmathresult{inf}\fi}}}
+% Read a CSV produced by the analysis code (comma separated, header row).
+\newcommand{\readcsv}[2]{\pgfplotstableread[col sep=comma]{#1}#2}
+
+% ---------------------------------------------------------------- title block
+% \ewfmaketitle{title}{subtitle}{author}{affiliation}{date}{abstract}{keywords}
+\newcommand{\ewfmaketitle}[7]{%
+  \twocolumn[
+  \begin{center}
+  {\LARGE\bfseries #1\par}
+  \vspace{0.35em}
+  {\large #2\par}
+  \vspace{0.9em}
+  {\large #3\par}
+  \ifx\relax#4\relax\else{\normalsize #4\par}\fi
+  \vspace{0.6em}
+  {\large #5\par}
+  \end{center}
+  \vspace{0.4em}
+  \begin{center}\textbf{Abstract}\end{center}
+  \vspace{-0.4em}
+  \begin{quote}\small #6\par
+  \smallskip\noindent\textbf{Keywords:} #7
+  \end{quote}
+  \vspace{1.2em}
+  ]}
+
+\endinput

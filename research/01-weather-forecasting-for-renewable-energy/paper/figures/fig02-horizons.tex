@@ -1,0 +1,32 @@
+% Figure 2: horizon map. Conceptual; the ranges are listed in data/literature/horizons.csv.
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[paper, width=0.83\textwidth, height=6.6cm,
+  xmode=log, xmin=1.5e-4, xmax=6e5,
+  ymin=-0.3, ymax=7.6, ytick={1,...,7}, y dir=reverse,
+  yticklabels={Plant control and hybrid storage, Grid control rooms and intraday trading, Day-ahead trading and scheduling, {O\&M, construction, commissioning}, {Hedging, hydro and fuel planning}, Budgets and re-forecasts, {Development, financing, PPAs}},
+  y tick label style={font=\scriptsize,text=ewfInk},
+  xtick={2.7778e-4,1.6667e-2,1,24,168,730,8760,87600},
+  xticklabels={1\,s,1\,min,1\,h,1\,day,1\,week,1\,month,1\,year,10\,years},
+  xlabel={Lead time (log scale)}, grid=none, xmajorgrids, ymajorgrids=false,
+  axis y line*=left, clip=false]
+% method regimes in the background
+\fill[ewfPanel] (axis cs:1.5e-4,-0.3) rectangle (axis cs:6,7.6);
+\fill[white]    (axis cs:6,-0.3) rectangle (axis cs:360,7.6);
+\fill[ewfPanel] (axis cs:360,-0.3) rectangle (axis cs:5040,7.6);
+\fill[white]    (axis cs:5040,-0.3) rectangle (axis cs:6e5,7.6);
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=north,align=center] at (axis cs:0.04,-0.3) {measurements, satellite,\\rapid-update NWP};
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=north,align=center] at (axis cs:46,-0.3) {NWP and\\ensembles};
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=north,align=center] at (axis cs:1350,-0.3) {ensemble\\anomalies};
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=north,align=center] at (axis cs:55000,-0.3) {historical records,\\climate data};
+% one bar per user group (one hue: the rows are nominal categories)
+\foreach \lo/\hi/\y in {2.7778e-4/0.5/1, 0.0833/24/2, 12/48/3, 24/240/4, 336/5040/5, 720/8760/6, 8760/262800/7}{
+  \edef\tmp{\noexpand\fill[ewfC1,rounded corners=1.5pt] (axis cs:\lo,\y-0.26) rectangle (axis cs:\hi,\y+0.26);}
+  \tmp
+}
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Who forecasts how far ahead.} Each bar spans the lead times a user group typically works with; shaded bands show which information dominates. Performance analysis, lost-energy calculations and insurance claims use the past and are not shown.}
+\label{fig:horizons}
+\end{figure*}

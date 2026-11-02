@@ -1,0 +1,8 @@
+\section{Visualising forecasts}
+\label{sec:visual}
+
+The right chart depends on who reads it and which decision follows (Table~\ref{tab:viz}). Four rules apply everywhere. Show uncertainty, as quantile bands or ensemble members, rather than a single line. State the time zone and interval convention and mark the present and the relevant gate closures. Use one categorical colour per entity throughout a report, never two y-axes in one chart, and dashed lines only for references and thresholds. Publish the numbers behind every chart, so that the chart is never the only way to read a value.
+
+The figures in this paper follow these rules with a colour palette validated for colour-vision deficiency: neighbouring categorical colours are separated by at least 9 units of $\Delta E$ (OKLab$\times$100) under simulated protanopia and deuteranopia and by at least 19.6 for normal vision, magnitudes use a single-hue blue ramp, and every figure's data are in \texttt{data/processed}.
+
+\input{tables/tab08-visualisation}

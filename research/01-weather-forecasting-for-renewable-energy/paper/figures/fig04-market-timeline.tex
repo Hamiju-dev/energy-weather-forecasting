@@ -1,0 +1,44 @@
+% Figure 4: European short-term market timeline for one delivery day.
+% Source data: data/literature/eu_market_timeline.csv. Run availability times are approximate.
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[font=\scriptsize, x=0.29cm, y=1cm]
+% time axis: 0 = 00:00 CET on D-1, 48 = 24:00 CET on D
+\fill[ewfPanel] (24,-0.15) rectangle (48,3.55);
+\node[anchor=north east,text=ewfInkSecondary] at (47.8,0.85) {delivery day D};
+\foreach \h/\lab in {0/00:00,6/06:00,12/12:00,18/18:00,24/00:00,30/06:00,36/12:00,42/18:00,48/24:00}{
+  \draw[ewfAxis] (\h,-0.15) -- (\h,-0.25);
+  \node[anchor=north,text=ewfInkSecondary] at (\h,-0.25) {\lab};
+}
+\draw[ewfAxis,line width=0.6pt] (0,-0.15) -- (48,-0.15);
+\node[anchor=north,text=ewfInkSecondary] at (12,-0.65) {D-1 (day before delivery), CET};
+\node[anchor=north,text=ewfInkSecondary] at (36,-0.65) {D, CET};
+% row labels
+\node[anchor=east,text=ewfInk] at (-0.4,2.9) {weather runs available};
+\node[anchor=east,text=ewfInk] at (-0.4,2.0) {auctions (gate closure)};
+\node[anchor=east,text=ewfInk] at (-0.4,1.1) {continuous intraday};
+\node[anchor=east,text=ewfInk] at (-0.4,0.35) {imbalance settlement};
+% weather runs (approximate availability of global 00/12 UTC runs)
+\foreach \t/\lab in {7.5/00 UTC run,19.5/12 UTC run,31.5/00 UTC run,43.5/12 UTC run}{
+  \fill[ewfC3] (\t,2.9) circle (2.6pt);
+  \node[anchor=south,text=ewfInkSecondary] at (\t,2.98) {\lab};
+}
+% auctions
+\foreach \t/\lab in {12/Day-ahead (SDAC),15/IDA1,22/IDA2,34/IDA3}{
+  \fill[ewfC1] (\t,2.0) +(0,0.13) -- +(0.32,0) -- +(0,-0.13) -- +(-0.32,0) -- cycle;
+}
+\node[anchor=north,text=ewfInk,font=\scriptsize\bfseries] at (12,1.83) {Day-ahead};
+\node[anchor=north,text=ewfInk] at (12,1.53) {12:00};
+\node[anchor=south,text=ewfInk] at (15,2.15) {IDA1 15:00};
+\node[anchor=south,text=ewfInk] at (22,2.15) {IDA2 22:00};
+\node[anchor=south,text=ewfInk] at (34,2.15) {IDA3 10:00};
+% continuous intraday
+\fill[ewfC2,rounded corners=2pt] (15,0.98) rectangle (48,1.22);
+\node[anchor=west,text=ewfInk] at (15.2,1.42) {opens on D-1, trading until shortly before each delivery quarter-hour};
+% imbalance
+\draw[ewfC8,line width=1.2pt,-{Stealth[length=2mm]}] (24,0.35) -- (48,0.35);
+\node[anchor=south,text=ewfInk] at (36,0.42) {every 15 minutes of delivery};
+\end{tikzpicture}
+\caption{\textbf{A delivery day has many deadlines, and each should use the freshest forecast.} European short-term markets for delivery day D, in CET. Diamonds mark auction gate closures; the orange bar is continuous intraday trading; green dots show roughly when the global 00 and 12\,UTC model runs become available (a few hours after their start, depending on the provider). Since 1 October 2025 the day-ahead auction trades 15-minute products.}
+\label{fig:market}
+\end{figure*}

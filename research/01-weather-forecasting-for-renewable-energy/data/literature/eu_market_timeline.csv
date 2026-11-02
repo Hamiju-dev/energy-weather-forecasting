@@ -1,0 +1,7 @@
+market,event,day,time_cet,resolution,since,source_key
+Day-ahead (SDAC),Gate closure,D-1,12:00,15 min,MTU since 2025-10-01,apg2025mtu
+Intraday auction IDA1,Gate closure,D-1,15:00,15 min,2024-06-13,nordpool2024ida
+Intraday auction IDA2,Gate closure,D-1,22:00,15 min,2024-06-13,nordpool2024ida
+Intraday auction IDA3,Gate closure (delivery 12:00-24:00 of D),D,10:00,15 min,2024-06-13,nordpool2024ida
+Continuous intraday (SIDC),Trading until shortly before delivery,D-1 to D,continuous,15 min,,nordpool2024ida
+Imbalance settlement (DE),Settlement period,D,every 15 min,15 min,,

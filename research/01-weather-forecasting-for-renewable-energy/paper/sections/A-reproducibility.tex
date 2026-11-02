@@ -1,0 +1,43 @@
+\section{Reproducibility}
+\label{app:repro}
+
+The paper is a self-contained research compendium in the repository folder \nolinkurl{research/01-weather-forecasting-for-renewable-energy}. Its structure:
+
+\begin{lstlisting}
+paper/            main.tex, sections/, figures/,
+                  tables/, generated/, references.bib
+code/             config.py, common.py, 01_ to 07_
+data/raw/         download manifests with SHA-256
+data/cache/       large downloads (not versioned)
+data/interim/     observations, forecast point values
+data/processed/   one CSV per figure and table
+data/literature/  quoted facts with sources
+supplement/       extended handbook (Markdown)
+\end{lstlisting}
+
+\para{Pipeline.} \texttt{make fetch} downloads the inputs: (1) station observations and the 2020--2024 climatology; (2) forecast extraction for the three models (about 12\,GB are read with byte-range requests, 5\,MB of point values are kept). \texttt{make analysis} runs the rest: (3) matching of forecasts and observations; (4) skill by lead time, bias correction and Table~\ref{tab:da}; (5) spatial aggregation; (6) power amplification and bidding; (7) the PV chain. \texttt{make paper} builds the PDF. Every script states its inputs and outputs in its header, and all settings live in \texttt{code/config.py}.
+
+\para{Figures and tables.} Each figure file reads its data with \texttt{pgfplots} from the CSV named in its header; each case-study number in the text is a macro defined in \texttt{paper/generated/}. Table~\ref{tab:map} maps results to their data and code.
+
+\begin{table}[h]
+\centering\small
+\caption{\textbf{Where each result comes from.} Script numbers refer to \texttt{code/}.}
+\label{tab:map}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}L{1.55cm}L{4.95cm}l@{}}
+\toprule
+Result & Data file in \texttt{data/processed/} & Script \\
+\midrule
+Fig.~\ref{fig:pv} & \nolinkurl{fig03_pv_chain_clear_day.csv} & 07 \\
+Fig.~\ref{fig:skill} & \nolinkurl{fig05_skill_by_lead_*.csv} & 04 \\
+Fig.~\ref{fig:aggregation} & \nolinkurl{fig06a_*.csv}, \nolinkurl{fig06b_*.csv} & 05 \\
+Fig.~\ref{fig:power} & \nolinkurl{fig07a_*}, \nolinkurl{fig07b_*}, \nolinkurl{fig07c_*.csv} & 06 \\
+Table~\ref{tab:da} & \nolinkurl{tab07_day_ahead_summary.csv} & 04 \\
+Prop.~\ref{prop:combine} & \nolinkurl{combination_check.csv} & 04 \\
+Stations & \nolinkurl{stations.csv} & 03 \\
+Tables~\ref{tab:market}--\ref{tab:data} & \nolinkurl{data/literature/*.csv} & n/a \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\para{Software and data licences.} Python 3.13 with pandas, NumPy, ecCodes, pvlib~\cite{holmgren2018pvlib} and windpowerlib~\cite{windpowerlib}; \LaTeX{} with pgfplots. ECMWF open data are used under CC-BY-4.0 (\copyright{} ECMWF); NOAA GFS and ISD data are in the public domain; the turbine power curve comes from the OpenEnergy turbine library distributed with windpowerlib.

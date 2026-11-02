@@ -1,0 +1,59 @@
+% ==========================================================================
+%  Template for a new research paper in this repository.
+%  1. Copy this folder to research/NN-your-title/paper/
+%  2. Fill in the title block and write sections/*.tex
+%  3. Let the analysis code write paper/generated/values-*.tex
+%  See research/STYLE_GUIDE.md for the full conventions.
+% ==========================================================================
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{ewf-paper}
+
+% Numbers written by the analysis code (uncomment when they exist)
+% \input{generated/values-01-example}
+
+% Path to the figure data, relative to this folder
+\newcommand{\datadir}{../data/processed}
+
+\begin{document}
+
+\ewfmaketitle
+  {Title of the Paper}
+  {A Subtitle That States the Scope}
+  {Author Name\footnotemark}
+  {}% optional affiliation
+  {Month Day, Year}
+  {Abstract of 200 to 300 words. State the question, the method and the results with numbers.}
+  {keyword one; keyword two; keyword three}
+\footnotetext{This paper is a research compendium: figures read their numbers from \texttt{data/processed}, numbers in the text are written by \texttt{code/}, and external facts are listed with sources in \texttt{data/literature}.}
+
+\section{Thesis}
+State the problem and the claim of the paper in the first paragraphs.
+
+\section{Example figure}
+\begin{figure}[t]
+\centering
+% \readcsv{\datadir/fig01_example.csv}\exampledata
+\begin{tikzpicture}
+\begin{axis}[paper, title={Example}, xlabel={$x$}, ylabel={$y$}]
+\addplot+[no marks,domain=0:10] {x};
+\addplot+[no marks,domain=0:10] {0.5*x+1};
+\addplot[reference,domain=0:10,samples=2] {5};
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{The first sentence states the finding.} Then say what is shown and where the data are.}
+\label{fig:example}
+\end{figure}
+
+\begin{proposition}[Name]
+\label{prop:example}
+Statement.
+\end{proposition}
+\begin{proof}
+Argument.
+\end{proof}
+
+{\small
+\bibliographystyle{unsrtnat}
+% \bibliography{references}
+}
+\end{document}

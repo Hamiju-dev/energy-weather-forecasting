@@ -1,0 +1,21 @@
+% Table 3: forecast horizons.
+\begin{table*}[t]
+\centering\small
+\caption{\textbf{Forecast horizons, their inputs and their users.}}
+\label{tab:horizons}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}L{2.3cm}L{2.0cm}L{1.6cm}YL{3.4cm}L{3.4cm}@{}}
+\toprule
+Horizon & Lead time & Resolution & Main inputs & Typical methods & Main users \\
+\midrule
+Very short term & seconds to 30\,min & 1\,s--1\,min & sky cameras, live plant data, nacelle or lidar wind & persistence, image-based cloud tracking & plant controllers, hybrid PV and storage \\
+Nowcasting & 30\,min to 6\,h & 5--15\,min & satellite images, live SCADA, rapid-update NWP, radar & cloud motion vectors, machine learning on images, blending & intraday traders, grid control rooms \\
+Intraday & 1 to 24\,h & 15\,min & latest NWP runs, nowcasts, live data & statistical blending, frequent re-runs & intraday auctions and continuous trading \\
+Day-ahead & 12 to 48\,h & 15\,min & 00 and 06\,UTC runs of several models & physical model plus statistical correction, quantiles & day-ahead auction, scheduling, O\&M planning \\
+Medium range & 2 to 15 days & 1\,h--1 day & global NWP and ensembles & calibrated ensemble statistics & maintenance, construction, weekly hedging \\
+Sub-seasonal & 2 to 6 weeks & weekly & extended-range ensembles & weekly anomalies, regime probabilities & monthly forwards, hydro, gas storage \\
+Seasonal & 1 to 7 months & monthly & multi-system seasonal forecasts & tercile probabilities & budgets, reservoirs, winter adequacy \\
+Long term & 1 to 30+ years & hourly to annual & reanalysis, satellite records, on-site data, climate projections & long-term correction, P-values, Monte Carlo & development, financing, PPAs \\
+\bottomrule
+\end{tabularx}
+\end{table*}

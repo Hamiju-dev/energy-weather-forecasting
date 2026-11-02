@@ -1,0 +1,25 @@
+% Table 2: forecast requirements by department across the asset life cycle.
+\begin{table*}[t]
+\centering\small
+\caption{\textbf{Forecast requirements by department.} The horizon is the time between issuing and using the forecast; negative horizons use the past.}
+\label{tab:dept}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}L{2.75cm}L{3.9cm}L{2.55cm}Y L{2.9cm}@{}}
+\toprule
+Department & Core question & Horizon & Main output & What ``good'' means \\
+\midrule
+Development & Is the site worth building? & 20--40 years of the past & long-term mean, monthly and diurnal profile & unbiased long-term mean \\
+Yield assessment, financing & How much, with what certainty? & 1, 10, 20 years & P50, P90, P99 & honest uncertainty \\
+Engineering & What must it survive, how should it be sized? & return periods of 50+ years & extremes, clipping, stow settings & correct extremes \\
+Construction & Can we work tomorrow? How many weather days to plan? & 0--10 days, plus climatology & go/no-go per activity, weather-downtime statistics & reliable limits, few surprises \\
+Commissioning & When can the tests run, and were they valid? & 0--7 days, plus measured data & test windows, weather-corrected results & stable conditions found \\
+Operations, O\&M & What do we do today and this week? & 0--10 days & alerts, maintenance windows, crew safety & useful warnings, few false alarms \\
+Performance analysis & Is the plant performing? & the past & expected vs.\ actual, PR, availability, losses & correct expected power \\
+Lost energy, insurance & How much energy and money was or will be lost? & past, and days to weeks ahead & kWh and EUR lost, repair priority & defensible method \\
+Asset management & Will we meet the budget? & month to year & budget, re-forecast, revenue & unbiased P50 \\
+Trading, direct marketing & What do we sell, at what risk? & 15 min to weeks & production and price quantiles & low imbalance cost \\
+Grid operation & Is the system balanced and secure? & minutes to a week & infeed, load, reserves, congestion & few large misses \\
+PPA and risk & What volume and shape risk do we carry? & years & profiles, capture rates, tails & correct correlations and tails \\
+\bottomrule
+\end{tabularx}
+\end{table*}

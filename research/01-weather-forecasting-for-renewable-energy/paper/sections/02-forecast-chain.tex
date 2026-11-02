@@ -1,0 +1,20 @@
+\section{What a forecast is, and what makes it good}
+\label{sec:chain}
+
+\para{The chain.} No operational system forecasts power directly from the sky. Every renewable forecast, whether it comes from a grid operator, a direct marketer, a commercial vendor or a research script, is built from the same chain (Figure~\ref{fig:chain}). Observations from satellites, aircraft, radiosondes and surface stations are combined with a previous forecast by data assimilation into an \emph{analysis}, the best estimate of the current atmosphere. A weather model, either a physics-based NWP model or a machine-learning model trained on reanalysis, steps that state forward. Post-processing removes systematic errors and brings the forecast to the site. A conversion model turns weather into power, using the plant's design and its current state. An uncertainty model attaches quantiles, ensembles or scenarios, and the result feeds a decision: a bid, a schedule, an alert, a report.
+
+\input{figures/fig01-forecast-chain}
+
+\para{Where the error comes from.} The dominant error source changes with the horizon. In the first hours, local cloud and wind fluctuations and the plant's state dominate; at day-ahead, the weather model's errors in cloud cover, cloud type and the timing of fronts; beyond about five days, the chaotic growth of initial errors~\cite{lorenz1963deterministic}, which only ensembles can describe. In practice, the largest \emph{avoidable} errors are often not meteorological: a wrong installed capacity, an inverter that has been off for a week, a curtailment rule the forecast does not know, or a timestamp shifted by one hour (Section~\ref{sec:data}).
+
+\para{Goodness.} Murphy's classic analysis separates three kinds of goodness~\cite{murphy1993good}. \emph{Consistency}: the forecast states what the forecaster actually believes, which for a model means it is optimised for the loss the user faces. \emph{Quality}: the agreement between forecasts and observations, measured by bias, mean absolute error (MAE), root mean square error (RMSE) and, for probabilistic forecasts, proper scoring rules such as the continuous ranked probability score (CRPS)~\cite{gneiting2007scoring}. \emph{Value}: the improvement of the decisions taken with the forecast. A forecast with slightly worse RMSE but better timing of ramps can be worth more to a trader. For energy use, quality and value further require that a forecast is
+\begin{itemize}
+\item specific to the target variable (good 2\,m temperature is irrelevant if irradiance under low stratus is poor);
+\item unbiased across seasons, hours and weather regimes;
+\item probabilistic and calibrated, then as sharp as possible;
+\item available before the decision deadline and refreshed when new information arrives;
+\item at the market's resolution, now 15 minutes in Europe;
+\item stable from run to run, robust to a missing input, and aware of the plant's state.
+\end{itemize}
+
+\para{Three ways to turn weather into power.} A \emph{physical} approach passes NWP irradiance or wind through a model of the plant: solar geometry, transposition, temperature and inverter models for PV; hub-height extrapolation, density correction, power curves and wakes for wind (Section~\ref{sec:foundations}). It works from the first day of operation and is explainable, but inherits every NWP bias. A \emph{statistical} approach learns power directly from NWP features and historical output, which corrects systematic errors automatically but needs a clean history and breaks when the plant changes. The \emph{hybrid} approach used by most operational systems feeds the physical model's output into a statistical correction, combining robustness for new plants with the accuracy of learned corrections. Orthogonal to this choice is whether the output is \emph{deterministic}, one value per time step, or \emph{probabilistic}, a distribution. Probabilistic output is now the standard for trading, storage optimisation and reserve sizing because those decisions depend on risk, not only on the expected value~\cite{hong2016gefcom,pinson2013wind}.

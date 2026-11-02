@@ -1,0 +1,33 @@
+% Figure 6: spatial aggregation. Data: data/processed/fig06a_*.csv, fig06b_aggregation_rmse_vs_n.csv
+% Script: code/05_spatial_aggregation.py
+\begin{figure*}[t]
+\centering
+\readcsv{\datadir/fig06a_error_correlation_pairs.csv}\aggpairs
+\readcsv{\datadir/fig06a_error_correlation_binned.csv}\aggbins
+\readcsv{\datadir/fig06b_aggregation_rmse_vs_n.csv}\aggn
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=2 by 1, horizontal sep=1.6cm},
+  paper, width=0.47\textwidth, height=5.2cm]
+% ---------------- (a)
+\nextgroupplot[title={(a) Error correlation between station pairs}, xlabel={Distance (km)},
+  ylabel={Correlation of day-ahead errors}, xmin=0, xmax=850, ymin=-0.3, ymax=0.7,
+  legend style={at={(0.98,0.98)},anchor=north east}]
+\addplot[reference,domain=0:850,samples=2,forget plot] {0};
+\addplot[only marks,mark=*,mark size=0.9pt,ewfC1,fill opacity=0.35,draw opacity=0] table[x=distance_km,y=error_correlation]{\aggpairs}; \addlegendentry{station pair}
+\addplot[ewfInk,line width=1.4pt,mark=*,mark size=1.8pt] table[x=distance_mid_km,y=mean_correlation]{\aggbins}; \addlegendentry{mean per 100\,km}
+% ---------------- (b)
+\nextgroupplot[title={(b) Error of a portfolio of $N$ stations}, xlabel={Number of stations $N$},
+  ylabel={RMSE relative to one station}, xmin=1, xmax=62, ymin=0, ymax=1.15,
+  legend style={at={(0.98,0.98)},anchor=north east}]
+\addplot[name path=hi,draw=none,forget plot] table[x=n_stations,y=relative_rmse_q90]{\aggn};
+\addplot[name path=lo,draw=none,forget plot] table[x=n_stations,y=relative_rmse_q10]{\aggn};
+\addplot[band=ewfC1,forget plot] fill between[of=hi and lo];
+\addplot[ewfC1,line width=1.4pt] table[x=n_stations,y=relative_rmse]{\aggn}; \addlegendentry{observed (random portfolios)}
+\addplot[ewfInk,line width=1.1pt,dashed] table[x=n_stations,y=theory]{\aggn}; \addlegendentry{Proposition~\ref{prop:smooth}}
+\addplot[reference,dotted,domain=1:62,samples=2,forget plot] {\valAggTheoryLimit};
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=south east] at (axis cs:61,\valAggTheoryLimit) {limit $\sqrt{\bar r}=\valAggTheoryLimit$};
+\end{groupplot}
+\end{tikzpicture}
+\caption{\textbf{Local errors average out; shared errors set a floor.} Day-ahead errors of 10\,m wind speed of the bias-corrected multi-model mean, June--July 2025. (a) Correlation of errors for all \valAggNumPairs{} station pairs against distance, with the mean per 100\,km bin. (b) RMSE of the average error of $N$ randomly chosen stations relative to the mean single-station RMSE (line: mean of 300 draws; band: 10th--90th percentile), and the prediction of Proposition~\ref{prop:smooth} with the observed mean correlation $\bar r=\valAggMeanCorr$.}
+\label{fig:aggregation}
+\end{figure*}

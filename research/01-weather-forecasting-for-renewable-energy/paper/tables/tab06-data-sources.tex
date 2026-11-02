@@ -1,0 +1,26 @@
+% Table 6: free data sources. Source data with URLs: data/literature/data_sources.csv
+\begin{table*}[t]
+\centering\small
+\caption{\textbf{Free data for weather-based energy forecasting.} The last column states whether commercial use is permitted. Full list with URLs: \texttt{data/literature/data\_sources.csv}.}
+\label{tab:data}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}L{2.6cm}L{3.9cm}YL{3.1cm}@{}}
+\toprule
+Purpose & Source & Content & Commercial use \\
+\midrule
+Real-time forecasts & ECMWF open data & IFS and AIFS, deterministic and ensemble, 0.25$^\circ$ & yes (CC-BY-4.0) \\
+ & NOAA GFS, GEFS, AIGFS & global forecasts and ensembles & yes (public domain) \\
+ & DWD ICON, ICON-D2, MOSMIX & fields down to 2\,km; station point forecasts & yes (attribution) \\
+ & M\'et\'eo-France, MET Norway & AROME, ARPEGE, MEPS, point API & yes (open licences) \\
+ & CAMS & aerosol and dust forecasts & yes (Copernicus licence) \\
+Convenience API & Open-Meteo & forecasts, past forecasts, satellite radiation, ERA5 & free tier: no \\
+Past forecasts & NOAA archives on AWS and Google Cloud; TIGGE & GFS, HRRR, GEFS reforecasts; multi-centre ensembles & NOAA: yes; TIGGE: no \\
+Reanalysis & ERA5, ERA5-Land, CERRA, COSMO-REA6 & hourly gap-free weather since 1940 (ERA5) & yes \\
+Satellite irradiance & SARAH-3, CAMS radiation, PVGIS, NSRDB & irradiance records and PV simulation & yes (attribution) \\
+Observations & DWD Climate Data Center, NOAA ISD, BSRN & station weather and reference radiation & DWD, ISD: yes; BSRN: research \\
+Energy and markets & ENTSO-E, SMARD, Energy-Charts, netztransparenz.de & generation, TSO forecasts, prices, imbalance & generally yes \\
+Plant data & Kelmarsh and Penmanshiel (Zenodo) & 10-minute SCADA of two UK wind farms & yes (CC-BY-4.0) \\
+Resource atlases & Global Solar Atlas, Global Wind Atlas; Renewables.ninja & long-term maps; simulated time series & atlases: yes; ninja: no \\
+\bottomrule
+\end{tabularx}
+\end{table*}

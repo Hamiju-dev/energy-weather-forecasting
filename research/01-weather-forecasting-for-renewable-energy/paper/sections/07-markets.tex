@@ -1,0 +1,28 @@
+\section{Weather and electricity prices}
+\label{sec:markets}
+
+In power systems with a large share of wind and solar, the weather forecast is the main driver of short-term prices, and traders react to every new model run.
+
+\para{Merit order and residual load.} Power plants are dispatched in order of marginal cost, and the price is set by the most expensive unit still needed. Wind and solar have almost no marginal cost, so they enter first and push gas and coal units out of the market. Prices therefore follow the residual load,
+\begin{equation}
+L^{\text{res}}_t=L_t-W_t-S_t ,
+\end{equation}
+the load $L$ that remains after wind $W$ and solar $S$, and weather acts on both sides: wind and irradiance on supply, temperature and daylight on demand. Strong wind lowers prices around the clock; sunshine creates a midday trough and an evening ramp; sun and wind on spring holidays produce negative prices; long, dark, calm winter spells (\emph{Dunkelflaute}) let gas set the price. Hydro-dominated markets follow precipitation and snowpack over months.
+
+\para{Evidence.} Table~\ref{tab:market} lists recent German observations. Negative day-ahead prices occurred in 573 hours of 2025~\cite{smard2026solar,bloomberg2026negative}; the solar capture rate, the solar-weighted price divided by the baseload price, fell to 29.7\,\% in May 2025~\cite{spglobal2025capture}; and during the Dunkelflaute of 12 December 2024 the hourly day-ahead price reached 936\,EUR/MWh, a peak that the regulator found no evidence of abuse in~\cite{smard2025peaks}.
+
+\input{tables/tab04-market-facts}
+
+\para{The market timeline.} Figure~\ref{fig:market} shows the European sequence for one delivery day. Futures cover years to days ahead; the single day-ahead coupling (SDAC) auction closes at 12:00\,CET on the day before delivery and has cleared 15-minute products since 1 October 2025~\cite{apg2025mtu}; three pan-European intraday auctions (15:00 and 22:00 on D-1, 10:00 on D) have run since 13 June 2024~\cite{nordpool2024ida}; continuous intraday trading runs until shortly before delivery; and remaining deviations are settled at the imbalance price every 15 minutes. Each gate is a decision point that a forecast pipeline has to serve with the freshest model run available at that moment.
+
+\input{figures/fig04-market-timeline}
+
+\para{Imbalance.} A seller whose plant produces $q^{\text{act}}_t$ after selling $q^{\text{sold}}_t$ settles the difference at the imbalance price, at a cost relative to the day-ahead price of approximately
+\begin{equation}
+C^{\text{imb}}=\sum_t\big(q^{\text{sold}}_t-q^{\text{act}}_t\big)\big(p^{\text{imb}}_t-p^{\text{DA}}_t\big).
+\end{equation}
+Two features make this costlier than a naive estimate. Forecast errors are correlated across the market (Proposition~\ref{prop:smooth}: the shared part does not average out), so when wind across the country falls short, nearly every wind seller is short at once and the imbalance price rises against them. And because short and long positions are priced differently, the expected-cost-minimising bid is a quantile, not the expected value (Proposition~\ref{prop:bid}).
+
+\para{Germany.} Most wind and solar plants sell through a direct marketer (\emph{Direktvermarkter}) who forecasts, trades and carries the imbalance risk, while the plant receives a sliding market premium relative to a monthly, technology-specific market value. For PV commissioned since 25 February 2025, no premium is paid in negative-price quarter-hours~\cite{roedl2025solarspitzen}, so a production forecast without a price forecast no longer predicts revenue. Grid-related curtailment (Redispatch~2.0) is compensated on the basis of calculated lost energy~\cite{bdew2021ausfallarbeit}.
+
+\para{Price forecasting.} Fundamental models build the supply stack from plant availability, fuel and carbon prices and intersect it with the residual load. Statistical and machine-learning models regress prices on forecasts of load, wind and solar for the zone and its neighbours, fuel and carbon prices, calendar effects and lagged prices; the open benchmark of Lago et al.~\cite{lago2021forecasting} and the review by Weron~\cite{weron2014electricity} are good starting points. Weather-driven price information is strongest for the next one or two days, remains useful for about a week through ensembles, and beyond that blends into climatology and fundamentals.

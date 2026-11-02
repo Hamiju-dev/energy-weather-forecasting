@@ -1,0 +1,65 @@
+% Figure 5: skill by lead time. Data: data/processed/fig05_skill_by_lead_{wind,t2m}.csv
+% Script: code/04_skill_by_lead_time.py. Only 12 UTC valid times are drawn.
+\begin{figure*}[t]
+\centering
+\readcsv{\datadir/fig05_skill_by_lead_wind.csv}\skwind
+\readcsv{\datadir/fig05_skill_by_lead_t2m.csv}\sktemp
+\pgfplotsset{
+  noon/.style={only if={valid_hour_utc}{12}},
+  ifs/.style={ewfC1,line width=1.1pt,mark=*,mark size=1.3pt},
+  aifs/.style={ewfC2,line width=1.1pt,mark=*,mark size=1.3pt},
+  gfs/.style={ewfC3,line width=1.1pt,mark=*,mark size=1.3pt},
+  mmmraw/.style={ewfInkMuted,line width=1.1pt,mark=*,mark size=1.3pt},
+  mmmbc/.style={ewfInk,line width=1.6pt,mark=*,mark size=1.6pt},
+}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=2 by 2, horizontal sep=1.6cm, vertical sep=1.55cm},
+  paper, width=0.47\textwidth, height=5.1cm, xmin=0, xmax=10, xtick={0,1,...,10}]
+% ---------------- (a) wind RMSE
+\nextgroupplot[title={(a) 10\,m wind speed: RMSE}, ylabel={RMSE (m/s)}, ymin=1.0, ymax=3.0,
+  legend to name=skilllegend, legend columns=4,
+  legend style={font=\scriptsize,/tikz/every even column/.append style={column sep=0.45cm}}]
+\addplot[name path=hi,draw=none,forget plot,noon] table[x=lead_days,y=rmse_hi_mmm_bc]{\skwind};
+\addplot[name path=lo,draw=none,forget plot,noon] table[x=lead_days,y=rmse_lo_mmm_bc]{\skwind};
+\addplot[band=ewfInk,forget plot] fill between[of=hi and lo];
+\addplot[ifs,noon] table[x=lead_days,y=rmse_ifs]{\skwind}; \addlegendentry{ECMWF IFS}
+\addplot[aifs,noon] table[x=lead_days,y=rmse_aifs]{\skwind}; \addlegendentry{ECMWF AIFS}
+\addplot[gfs,noon] table[x=lead_days,y=rmse_gfs]{\skwind}; \addlegendentry{NOAA GFS}
+\addplot[mmmraw,noon] table[x=lead_days,y=rmse_mmm]{\skwind}; \addlegendentry{multi-model mean (MMM)}
+\addplot[mmmbc,noon] table[x=lead_days,y=rmse_mmm_bc]{\skwind}; \addlegendentry{MMM, bias-corrected}
+\addplot[reference,noon] table[x=lead_days,y=rmse_climatology]{\skwind}; \addlegendentry{climatology 2020--2024}
+\addplot[reference,dotted,line width=0.9pt,noon] table[x=lead_days,y=rmse_persistence]{\skwind}; \addlegendentry{persistence}
+% ---------------- (b) wind skill
+\nextgroupplot[title={(b) 10\,m wind speed: skill against climatology}, ylabel={MSE skill score}, ymin=-0.8, ymax=0.8]
+\addplot[reference,domain=0:10,samples=2,forget plot] {0};
+\addplot[ifs,noon] table[x=lead_days,y=skill_ifs]{\skwind};
+\addplot[aifs,noon] table[x=lead_days,y=skill_aifs]{\skwind};
+\addplot[gfs,noon] table[x=lead_days,y=skill_gfs]{\skwind};
+\addplot[mmmraw,noon] table[x=lead_days,y=skill_mmm]{\skwind};
+\addplot[mmmbc,noon] table[x=lead_days,y=skill_mmm_bc]{\skwind};
+\node[font=\tiny,text=ewfInkSecondary,anchor=south west] at (axis cs:0.1,0.0) {better than climatology};
+% ---------------- (c) temperature RMSE
+\nextgroupplot[title={(c) 2\,m temperature: RMSE}, ylabel={RMSE (K)}, ymin=0.5, ymax=6.5, xlabel={Lead time (days)}]
+\addplot[name path=hi,draw=none,forget plot,noon] table[x=lead_days,y=rmse_hi_mmm_bc]{\sktemp};
+\addplot[name path=lo,draw=none,forget plot,noon] table[x=lead_days,y=rmse_lo_mmm_bc]{\sktemp};
+\addplot[band=ewfInk,forget plot] fill between[of=hi and lo];
+\addplot[ifs,noon] table[x=lead_days,y=rmse_ifs]{\sktemp};
+\addplot[aifs,noon] table[x=lead_days,y=rmse_aifs]{\sktemp};
+\addplot[gfs,noon] table[x=lead_days,y=rmse_gfs]{\sktemp};
+\addplot[mmmbc,noon] table[x=lead_days,y=rmse_mmm_bc]{\sktemp};
+\addplot[reference,noon] table[x=lead_days,y=rmse_climatology]{\sktemp};
+\addplot[reference,dotted,line width=0.9pt,noon] table[x=lead_days,y=rmse_persistence]{\sktemp};
+% ---------------- (d) temperature skill
+\nextgroupplot[title={(d) 2\,m temperature: skill against climatology}, ylabel={MSE skill score}, ymin=-0.4, ymax=1.0, xlabel={Lead time (days)}]
+\addplot[reference,domain=0:10,samples=2,forget plot] {0};
+\addplot[ifs,noon] table[x=lead_days,y=skill_ifs]{\sktemp};
+\addplot[aifs,noon] table[x=lead_days,y=skill_aifs]{\sktemp};
+\addplot[gfs,noon] table[x=lead_days,y=skill_gfs]{\sktemp};
+\addplot[mmmraw,noon] table[x=lead_days,y=skill_mmm]{\sktemp};
+\addplot[mmmbc,noon] table[x=lead_days,y=skill_mmm_bc]{\sktemp};
+\end{groupplot}
+\end{tikzpicture}\\[3pt]
+\ref{skilllegend}
+\caption{\textbf{Skill decays within days; averaging and bias correction buy back about three.} Verification at 12\,UTC valid times for \valNumEvalRuns{} runs (June--July 2025) at \valNumStations{} German stations. MMM: multi-model mean of IFS, AIFS and GFS; BC: running 30-day bias correction. The grey band is the 95\,\% bootstrap interval of the bias-corrected MMM. The skill score is $1-\text{MSE}/\text{MSE}_{\text{climatology}}$ with the 2020--2024 station climatology; below zero the forecast is worse than climatology.}
+\label{fig:skill}
+\end{figure*}

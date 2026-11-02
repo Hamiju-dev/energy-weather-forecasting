@@ -1,0 +1,14 @@
+model,centre,type,grid,range_days,runs_per_day,ensemble_members,open_data,licence,source_key
+IFS HRES / ENS,ECMWF,physics,9 km (open data 0.25 deg),10 (ENS 15),4,51,yes,CC-BY-4.0,ecmwf2025opendata
+AIFS Single / AIFS ENS,ECMWF,machine learning,~0.25 deg,15,4,51 (ENS),yes,CC-BY-4.0,ecmwf2025aifsens
+ECMWF extended range,ECMWF,physics,ensemble,46,1,101,partly,CC-BY-4.0,ecmwf2025opendata
+GFS / GEFS,NOAA NCEP,physics,0.25 deg,16 (GEFS 35 at 00 UTC),4,31,yes,public domain,noaa2025gfs
+AIGFS / AIGEFS / HGEFS,NOAA NCEP,machine learning (GraphCast-based) and hybrid,~0.25 deg,16,4,31 / 62,yes,public domain,wmo2025noaaai
+ICON,DWD,physics,~13 km,7.5,4,40 (ICON-EPS),yes,open with attribution,dwd2025icon
+ICON-EU,DWD,physics,~6.5 km,5,8,40 (EPS),yes,open with attribution,dwd2025icon
+ICON-D2 / ICON-D2-EPS,DWD,physics (convection-permitting),~2 km,2,8,20,yes,open with attribution,dwd2025icon
+ICON-D2-RUC,DWD,physics (rapid update),~2 km,~0.6,24,ensemble,yes,open with attribution,wetterdienst2025ruc
+MOSMIX,DWD,statistical post-processing (MOS),~5400 stations,10,several,none,yes,open with attribution,dwd2025icon
+AROME / ARPEGE,Meteo-France,physics,1.3 km / ~5 km,2 / 4,several / 4,yes (PE-AROME),yes,Etalab open licence,
+HRRR,NOAA,physics (rapid refresh),3 km US,0.75 (2 at synoptic hours),24,none,yes,public domain,
+CAMS global,ECMWF / Copernicus,atmospheric composition,~40 km,5,2,none,yes,Copernicus licence,

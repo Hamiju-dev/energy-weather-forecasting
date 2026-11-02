@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Large downloads that are re-created by `make fetch` (see each paper's data/README.md)
+research/*/data/cache/
+
+# LaTeX build files (the final PDF is copied to the paper folder root and committed)
+research/*/paper/*.aux
+research/*/paper/*.bbl
+research/*/paper/*.blg
+research/*/paper/*.fdb_latexmk
+research/*/paper/*.fls
+research/*/paper/*.log
+research/*/paper/*.out
+research/*/paper/*.synctex.gz
+research/*/paper/main.pdf
+research/template/*.aux
+research/template/*.log
+research/template/*.pdf

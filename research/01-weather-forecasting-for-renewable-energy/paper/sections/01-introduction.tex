@@ -1,0 +1,18 @@
+\section{Thesis}
+\label{sec:intro}
+
+There is no such thing as \emph{the} weather forecast for renewable energy. A day-ahead trader needs the photovoltaic (PV) output of a whole country in quarter-hours before 12:00 CET. A commissioning engineer needs to know which of the next five days will be clear enough for a capacity test. A crane supervisor needs gusts at hub height for tomorrow morning, an asset manager needs the expected yield of the rest of the year, and a bank needs the production that will be exceeded in nine years out of ten. All five ask the same atmosphere a different question, on a different time scale, with a different cost for being wrong.
+
+The literature treats these questions in separate communities: meteorology studies the skill of numerical weather prediction (NWP)~\cite{bauer2015quiet}, energy forecasting studies the conversion of weather into power and its use in markets~\cite{hong2020energy,sweeney2020future}, and resource assessment studies long-term yields. Practitioners, who have to serve all of them from one data pipeline, are left to assemble the pieces themselves.
+
+The thesis of this paper is that a weather forecast for renewable energy is good only relative to a decision, and that the requirements of every decision can be written down along three axes: the \emph{technology} that converts weather into energy, the \emph{department} that acts on the forecast, and the \emph{horizon} between issue and use. Once those are fixed, the variables, resolution, timing, uncertainty format and scoring rule follow.
+
+The paper makes four contributions.
+\begin{enumerate}
+\item A requirements map: which weather variables matter for each technology (Section~\ref{sec:tech}), what each department across the asset life cycle needs (Section~\ref{sec:dept}) and how horizons, predictability and market deadlines interact (Section~\ref{sec:horizons}).
+\item The foundations in one notation (Section~\ref{sec:foundations}): solar geometry and the PV chain, wind power physics, statistical post-processing, scoring rules, and four propositions that govern forecast design: the amplification of wind errors by the power curve, the smoothing of errors across sites, the condition under which averaging two models helps, and the optimal bid under asymmetric imbalance costs.
+\item A practical guide to markets (Section~\ref{sec:markets}), models and simulations (Section~\ref{sec:methods}), free data and their licences, and the data-handling errors that most often break forecasts (Section~\ref{sec:data}).
+\item A case study (Section~\ref{sec:case}) that tests the propositions on \valNumRuns{} days of 00\,UTC forecasts from ECMWF IFS, ECMWF's machine-learning model AIFS and NOAA GFS, verified against \valNumStations{} German stations from May to July 2025.
+\end{enumerate}
+
+The paper is written as a research compendium. Every figure reads its data from a CSV file, every case-study number in the text is produced by the analysis code, and every external fact is listed with its source. Appendix~\ref{app:repro} explains how to rebuild everything.

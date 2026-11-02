@@ -1,0 +1,8 @@
+user_group,lead_min_hours,lead_max_hours,lead_min_label,lead_max_label,basis
+Plant control and hybrid storage,0.00027778,0.5,1 s,30 min,expert assessment (Sections 4-5)
+Grid control rooms and intraday trading,0.0833,24,5 min,24 h,expert assessment (Sections 4-5)
+Day-ahead trading and scheduling,12,48,12 h,48 h,market design: gate closure 12:00 CET on D-1 for delivery on D
+"O&M, construction, commissioning",24,240,1 day,10 days,expert assessment (Sections 4-5)
+"Hedging, hydro and fuel planning",336,5040,2 weeks,7 months,sub-seasonal and seasonal forecast ranges
+Budgets and re-forecasts,720,8760,1 month,1 year,expert assessment (Sections 4-5)
+"Development, financing, PPAs",8760,262800,1 year,30 years,typical asset life and loan tenors

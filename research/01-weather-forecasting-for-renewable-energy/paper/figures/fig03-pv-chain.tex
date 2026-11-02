@@ -1,0 +1,36 @@
+% Figure 3: the PV chain on a clear day. Data: data/processed/fig03_pv_chain_clear_day.csv
+% Script: code/07_pv_clear_sky_chain.py
+\begin{figure*}[t]
+\centering
+\readcsv{\datadir/fig03_pv_chain_clear_day.csv}\pvday
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=3 by 1, horizontal sep=1.25cm},
+  paper, width=0.345\textwidth, height=5.0cm, xmin=2.5, xmax=19.5,
+  xtick={3,6,9,12,15,18}, xlabel={Hour (UTC)}]
+% (a) irradiance
+\nextgroupplot[title={(a) Irradiance, clear sky}, ylabel={W/m$^2$}, ymin=0, ymax=1480, ytick={0,200,...,1000},
+  legend style={at={(0.02,0.98)},anchor=north west}]
+\addplot+[no marks] table[x=hour_utc,y=ghi_wm2]{\pvday}; \addlegendentry{GHI}
+\addplot+[no marks] table[x=hour_utc,y=dni_wm2]{\pvday}; \addlegendentry{DNI}
+\addplot+[no marks] table[x=hour_utc,y=dhi_wm2]{\pvday}; \addlegendentry{DHI}
+\addplot[ewfInk,line width=1.4pt,no marks] table[x=hour_utc,y=poa_global_wm2]{\pvday}; \addlegendentry{POA, 20$^\circ$ south}
+% (b) power
+\nextgroupplot[title={(b) Power of a 10\,MWp / 7.7\,MWac plant}, ylabel={MW}, ymin=0, ymax=10.5,
+  legend style={at={(0.02,0.98)},anchor=north west}]
+\addplot[ewfInkMuted,line width=1.1pt,no marks] table[x=hour_utc,y=p_dc_at_25c_mw]{\pvday}; \addlegendentry{DC at 25\,$^\circ$C}
+\addplot[ewfC1,line width=1.1pt,no marks] table[x=hour_utc,y=p_dc_mw]{\pvday}; \addlegendentry{DC}
+\addplot[ewfC2,line width=1.4pt,no marks] table[x=hour_utc,y=p_ac_mw]{\pvday}; \addlegendentry{AC, clipped}
+\addplot[reference,domain=2.5:19.5,samples=2,forget plot] {7.7};
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=south east] at (axis cs:19.3,7.7) {inverter limit};
+% (c) temperature
+\nextgroupplot[title={(c) Air and module temperature}, ylabel={$^\circ$C}, ymin=10, ymax=65,
+  legend style={at={(0.98,0.98)},anchor=north east}]
+\addplot[ewfC1,line width=1.1pt,no marks] table[x=hour_utc,y=air_temperature_c]{\pvday}; \addlegendentry{air (observed)}
+\addplot[ewfC2,line width=1.1pt,no marks] table[x=hour_utc,y=cell_temperature_c]{\pvday}; \addlegendentry{cell (Faiman)}
+\addplot[reference,domain=2.5:19.5,samples=2,forget plot] {25};
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=north east] at (axis cs:19.3,24.5) {STC 25\,$^\circ$C};
+\end{groupplot}
+\end{tikzpicture}
+\caption{\textbf{On a clear day, temperature and the inverter limit shape PV output as much as irradiance.} A 10\,MWp fixed-tilt plant near Leipzig on 21 June 2025 (clear-sky irradiance from the Ineichen-Perez model, observed air temperature and wind at Leipzig-Halle airport). (a) Transposition to the 20$^\circ$ south-facing plane raises the peak above GHI. (b) Module heating lowers DC power below its 25\,$^\circ$C value, and the 7.7\,MW inverter limit clips the midday output. (c) At noon the modules run more than 20\,K above air temperature.}
+\label{fig:pv}
+\end{figure*}

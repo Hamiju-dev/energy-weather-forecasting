@@ -1,0 +1,32 @@
+% Figure 1: the forecast chain. Diagram only (no data file).
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[font=\footnotesize,
+  stage/.style={draw=#1,fill=#1!9,rounded corners=3pt,line width=0.7pt,
+                minimum width=2.18cm,minimum height=1.05cm,text width=2.0cm,align=center,inner sep=3pt},
+  note/.style={font=\scriptsize,text=ewfInkSecondary,text width=2.15cm,align=center,anchor=north},
+  arr/.style={-{Stealth[length=2.2mm]},ewfInkMuted,line width=0.7pt}]
+\def\dx{2.52}
+\node[stage=ewfC1] (s1) at (0*\dx,0) {\textbf{Observations}};
+\node[stage=ewfC1] (s2) at (1*\dx,0) {\textbf{Data}\\\textbf{assimilation}};
+\node[stage=ewfC1] (s3) at (2*\dx,0) {\textbf{Weather}\\\textbf{model}};
+\node[stage=ewfC2] (s4) at (3*\dx,0) {\textbf{Post-}\\\textbf{processing}};
+\node[stage=ewfC2] (s5) at (4*\dx,0) {\textbf{Weather-to-}\\\textbf{power}};
+\node[stage=ewfC2] (s6) at (5*\dx,0) {\textbf{Uncertainty}};
+\node[stage=ewfC2] (s7) at (6*\dx,0) {\textbf{Decision}};
+\foreach \a/\b in {s1/s2,s2/s3,s3/s4,s4/s5,s5/s6,s6/s7} \draw[arr] (\a) -- (\b);
+\node[note] at ($(s1.south)+(0,-0.12)$) {satellites, radiosondes, aircraft, surface stations, radar};
+\node[note] at ($(s2.south)+(0,-0.12)$) {4D-Var or ensemble Kalman filter; output: the analysis};
+\node[note] at ($(s3.south)+(0,-0.12)$) {physics: IFS, ICON, GFS; machine learning: AIFS, GraphCast; deterministic and ensemble runs};
+\node[note] at ($(s4.south)+(0,-0.12)$) {bias correction, MOS, downscaling to the site, blending of models};
+\node[note] at ($(s5.south)+(0,-0.12)$) {pvlib chain, power curve, wakes; capacity, outages, curtailment rules};
+\node[note] at ($(s6.south)+(0,-0.12)$) {quantiles, ensembles, scenarios; calibration};
+\node[note] at ($(s7.south)+(0,-0.12)$) {bid, schedule, alert, report, invoice, claim};
+\draw[decorate,decoration={brace,amplitude=4pt},ewfC1,line width=0.7pt]
+  ($(s1.north west)+(0,0.12)$) -- node[above=4pt,font=\scriptsize,text=ewfInk]{weather centres (ECMWF, DWD, NOAA, \dots)} ($(s3.north east)+(0,0.12)$);
+\draw[decorate,decoration={brace,amplitude=4pt},ewfC2,line width=0.7pt]
+  ($(s4.north west)+(0,0.12)$) -- node[above=4pt,font=\scriptsize,text=ewfInk]{forecast users (grid operators, marketers, operators, vendors)} ($(s7.north east)+(0,0.12)$);
+\end{tikzpicture}
+\caption{\textbf{Every renewable forecast is a chain, and every link adds error.} Blue stages are run by weather centres and are shared by all users; orange stages are where an energy forecast is made specific to a plant, a portfolio and a decision.}
+\label{fig:chain}
+\end{figure*}

@@ -1,0 +1,32 @@
+% Table 1: weather variables by technology. Expert assessment summarising Section 3.
+\newcommand{\impc}{{\color{ewfSeq600}$\bullet\bullet\bullet$}}
+\newcommand{\impb}{{\color{ewfSeq400}$\bullet\bullet$}\phantom{$\bullet$}}
+\newcommand{\impa}{{\color{ewfSeq300}$\bullet$}\phantom{$\bullet\bullet$}}
+\newcommand{\impn}{{\color{ewfAxis}\textperiodcentered}\phantom{$\bullet\bullet$}}
+\begin{table*}[t]
+\centering\small
+\caption{\textbf{Weather variables by technology.} Three dots: the variable drives output or operation; two: important correction or constraint; one: minor or indirect; a centred point: not relevant. Storage depends on weather mainly through prices and co-located generation.}
+\label{tab:tech}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+Variable & PV & CSP & Onshore wind & Offshore wind & Hydro & Storage & Load and grid \\
+\midrule
+Irradiance (GHI, DNI, DHI) & \impc & \impc & \impn & \impn & \impn & \impa & \impb \\
+Cloud cover by level and type & \impc & \impc & \impn & \impn & \impn & \impn & \impa \\
+Aerosols, dust, smoke & \impb & \impc & \impn & \impn & \impn & \impn & \impn \\
+Air temperature & \impb & \impa & \impb & \impa & \impb & \impb & \impc \\
+Hub-height wind speed & \impa & \impa & \impc & \impc & \impn & \impn & \impb \\
+Direction, shear, stability, turbulence & \impn & \impn & \impb & \impc & \impn & \impn & \impn \\
+Gusts and storms & \impb & \impb & \impb & \impb & \impn & \impn & \impb \\
+Air density (pressure, humidity) & \impn & \impn & \impb & \impb & \impn & \impn & \impn \\
+Precipitation & \impa & \impn & \impa & \impn & \impc & \impn & \impa \\
+Snow (fall, depth, melt) & \impb & \impa & \impa & \impn & \impc & \impn & \impa \\
+Hail and lightning & \impb & \impb & \impa & \impb & \impn & \impn & \impb \\
+Icing conditions & \impn & \impn & \impb & \impa & \impn & \impn & \impb \\
+Waves (height, period) & \impn & \impn & \impn & \impc & \impn & \impn & \impn \\
+Fog and visibility & \impb & \impa & \impa & \impb & \impn & \impn & \impn \\
+River flow, soil moisture & \impn & \impn & \impn & \impn & \impc & \impn & \impn \\
+\bottomrule
+\end{tabular}
+\end{table*}

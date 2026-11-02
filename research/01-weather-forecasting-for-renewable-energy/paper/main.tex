@@ -1,0 +1,53 @@
+% ==========================================================================
+%  Paper 01: Weather Forecasting for Renewable Energy
+%  Build: run `make` in this folder (or see ../README.md).
+%  Numbers in the text come from paper/generated/*.tex, written by ../code/.
+%  Figures read their data from ../data/processed/*.csv.
+% ==========================================================================
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{ewf-paper}
+
+% Results written by the analysis code (never edit by hand)
+\input{generated/values-04-skill}
+\input{generated/values-05-aggregation}
+\input{generated/values-06-power}
+\input{generated/values-07-pv}
+
+% Path to the figure data, relative to this folder
+\newcommand{\datadir}{../data/processed}
+
+\begin{document}
+
+\ewfmaketitle
+  {Weather Forecasting for Renewable Energy}
+  {Requirements by Technology, Department and Horizon, with Evidence from Three Global Models over Germany}
+  {Emil Mierza\footnotemark}
+  {}
+  {November 2, 2026}
+  {\input{sections/00-abstract}}
+  {renewable energy forecasting; numerical weather prediction; machine-learning weather models; forecast verification; photovoltaics; wind power; electricity markets; probabilistic forecasting}
+\footnotetext{This paper is a research compendium: every figure reads its numbers from a CSV file in \texttt{data/processed}, every number quoted from the case study is written by the analysis code in \texttt{code/}, and every external fact is listed with its source in \texttt{data/literature}. All data used are public. References to legal provisions are for context and are not legal advice.}
+
+\input{sections/01-introduction}
+\input{sections/02-forecast-chain}
+\input{sections/03-technologies}
+\input{sections/04-departments}
+\input{sections/05-horizons}
+\input{sections/06-foundations}
+\input{sections/07-markets}
+\input{sections/08-methods}
+\input{sections/09-data}
+\input{sections/10-case-study}
+\input{sections/11-visualisation}
+\input{sections/12-limitations}
+\input{sections/13-conclusion}
+
+\appendix
+\input{sections/A-reproducibility}
+
+{\small
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+}
+
+\end{document}

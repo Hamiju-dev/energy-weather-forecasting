@@ -1,0 +1,127 @@
+\section{Foundations}
+\label{sec:foundations}
+
+This section collects the relations that a forecasting system implements, in one notation, and proves four propositions that govern forecast design. Angles are in degrees, irradiance $G$ in W/m$^2$, wind speed $v$ in m/s and air density $\rho$ in kg/m$^3$.
+
+\subsection{Solar geometry and the PV chain}
+
+With day of year $n$, latitude $\varphi$, declination $\delta$ and hour angle $\omega$ (zero at solar noon, 15$^\circ$ per hour), the solar zenith angle $\theta_z$, the extraterrestrial irradiance and the air mass are
+\begin{align}
+\cos\theta_z &= \sin\varphi\sin\delta+\cos\varphi\cos\delta\cos\omega, \label{eq:zenith}\\
+G_0 &= G_{sc}\Big(1+0.033\cos\tfrac{360^\circ n}{365}\Big)\cos\theta_z, \\
+AM &= \big[\cos\theta_z+0.50572\,(96.07995-\theta_z)^{-1.6364}\big]^{-1},
+\end{align}
+with $G_{sc}\approx1361$\,W/m$^2$ and the air mass of Kasten and Young~\cite{kasten1989airmass}. Operational code uses the NREL solar position algorithm~\cite{reda2004spa}. Global, direct normal and diffuse irradiance are linked by $GHI=DNI\cos\theta_z+DHI$. Two normalisations remove the deterministic cycle: the clearness index $k_t=GHI/G_0$ and the clear-sky index $k_c=GHI/GHI_{\text{clear}}$, where $GHI_{\text{clear}}$ comes from a clear-sky model such as Ineichen-Perez with Linke turbidity~\cite{ineichen2002linke}. Forecasting $k_c$ instead of $GHI$ leaves only the weather to be learned. When a model gives only $GHI$, a decomposition model estimates the diffuse fraction $k_d=DHI/GHI$; the Erbs model~\cite{erbs1982diffuse} is
+\begin{equation}
+k_d=\begin{cases}1-0.09k_t, & k_t\le0.22,\\ 0.9511-0.1604k_t+4.388k_t^2\\ \quad-16.638k_t^3+12.336k_t^4, & 0.22<k_t\le0.80,\\ 0.165, & k_t>0.80.\end{cases}
+\end{equation}
+For a surface with tilt $\beta$ and azimuth $\gamma$, the angle of incidence $\theta$ and the plane-of-array irradiance are
+\begin{align}
+\cos\theta&=\cos\theta_z\cos\beta+\sin\theta_z\sin\beta\cos(\gamma_s-\gamma),\\
+G_{\text{POA}}&=DNI\max(0,\cos\theta)+G_{d}+GHI\,\rho_g\tfrac{1-\cos\beta}{2}, \label{eq:poa}
+\end{align}
+where $\rho_g$ is the ground albedo and the sky-diffuse part $G_d$ is $DHI(1+\cos\beta)/2$ in the isotropic model and is computed with the anisotropic Perez model~\cite{perez1990modeling} in practice. Reflection losses follow an incidence-angle modifier, for example $\text{IAM}=1-b_0(1/\cos\theta-1)$ with $b_0\approx0.05$. The cell temperature (Faiman~\cite{faiman2008temperature}), DC power (PVWatts~\cite{dobos2014pvwatts}) and AC power with clipping are
+\begin{align}
+T_c&=T_a+\frac{G_{\text{POA}}}{U_0+U_1v}, \label{eq:faiman}\\
+P_{DC}&=P_{DC,0}\,\frac{G_{\text{POA,eff}}}{1000}\,\big[1+\gamma\,(T_c-25)\big], \label{eq:pvwatts}\\
+P_{AC}&=\min\big(\eta\,P_{DC},\;P_{AC,\max}\big), \label{eq:clip}
+\end{align}
+with $U_0=25$\,W/(m$^2$K), $U_1=6.84$\,W\,s/(m$^3$K) and $\gamma\approx-0.0035$\,K$^{-1}$ for current crystalline modules. All steps are implemented in pvlib~\cite{holmgren2018pvlib}.
+
+Figure~\ref{fig:pv} runs this chain for a 10\,MWp plant near Leipzig with a DC/AC ratio of 1.3 on a clear 21 June 2025, using observed air temperature and wind. Tilting the modules by 20$^\circ$ raises the daily irradiation from \valPvGhiKwh{} to \valPvPoaKwh{}\,kWh/m$^2$; module temperatures of up to \valPvMaxCellTemp\,$^\circ$C at an air temperature of \valPvMaxAirTemp\,$^\circ$C cost \valPvTempLossPct\,\% of the DC energy, and the inverter limit clips the output for \valPvClipHours{} hours around solar noon (\valPvSolarNoonUtc\,UTC), losing \valPvClipLossPct\,\% of the AC energy. On such a day the inverter limit, not the irradiance forecast, decides the midday output.
+
+\input{figures/fig03-pv-chain}
+
+\subsection{Wind power}
+
+The power extracted by a rotor of swept area $A$ is
+\begin{equation}
+P=\tfrac12\,\rho\,A\,C_p\,v^3,\qquad C_p\le\tfrac{16}{27}\approx0.593, \label{eq:windpower}
+\end{equation}
+the upper bound being the Betz limit~\cite{burton2011handbook}. Air density follows from pressure and temperature, $\rho=p/(R_dT)$ with $R_d=287.05$\,J/(kg\,K), and power curves measured at a reference density $\rho_0$ are applied to the density-normalised speed $v_n=v(\rho/\rho_0)^{1/3}$~\cite{iec61400-12-1}. Winds at 10\,m or 100\,m are brought to hub height $z$ with a power law $v(z)=v(z_r)(z/z_r)^\alpha$, where $\alpha\approx0.14$ in neutral conditions and much more on stable nights, or with the logarithmic profile $v(z)=(u_*/\kappa)[\ln(z/z_0)-\psi_m(z/L)]$ including a stability correction. The long-term energy is $\text{AEP}=8760\int P(v)f(v)\,dv$ with a Weibull density $f(v)=\frac{k}{c}(\frac{v}{c})^{k-1}e^{-(v/c)^k}$, and wake losses can be estimated with the Jensen model~\cite{jensen1983note}, $v_w/v_\infty=1-(1-\sqrt{1-C_T})/(1+2k_wx/D)^2$.
+
+\begin{proposition}[Power-curve amplification]
+\label{prop:cubic}
+Let $P(v)=k\,(v^3-v_{ci}^3)$ between the cut-in speed $v_{ci}$ and the rated speed $v_r$, and $P=P_r$ between $v_r$ and cut-out. The elasticity of power with respect to wind speed is
+\begin{equation}
+\eta(v)=\frac{v}{P}\frac{dP}{dv}=\frac{3v^3}{v^3-v_{ci}^3}\;\ge 3 \quad\text{on }(v_{ci},v_r),
+\end{equation}
+and $\eta=0$ between rated and cut-out speed. A small relative wind-speed error $\varepsilon$ therefore becomes a relative power error of at least $3\varepsilon$ at partial load and of none at full load.
+\end{proposition}
+\begin{proof}
+On $(v_{ci},v_r)$, $dP/dv=3kv^2$, so $\eta=3kv^3/(k(v^3-v_{ci}^3))$, which exceeds 3 because $v_{ci}^3>0$. On $(v_r,v_{co})$ the derivative is zero.
+\end{proof}
+
+Wind forecasts are therefore hardest to use exactly where turbines spend most of their time, at partial load, and errors near cut-in are amplified most. The case study measures an aggregate amplification of \valAmplificationDA{} (Section~\ref{sec:case}).
+
+\subsection{Hydro, demand and grid}
+
+Hydropower is $P=\eta\rho_wgQH$ for flow $Q$ and head $H$; inflow follows a catchment water balance $dS/dt=P_{\text{precip}}-ET-Q$, with snowmelt often modelled by a degree-day factor, $M=\text{DDF}\max(0,T-T_0)$. Temperature-driven demand is summarised by heating and cooling degree days, $\text{HDD}=\sum\max(0,T_b-\bar T)$ and $\text{CDD}=\sum\max(0,\bar T-T_b)$. Dynamic line rating solves the conductor heat balance $q_c(v,T_a)+q_r=q_s+I^2R(T_c)$ for the current $I$ that keeps the conductor at its limit temperature.
+
+\subsection{Statistical post-processing and uncertainty}
+
+Model output statistics (MOS)~\cite{glahn1972mos} regress the target on NWP outputs, $\hat y=a+\sum_ib_ix_i$, per site and lead time; recursive variants such as a Kalman-filtered bias $\hat b_t=\hat b_{t-1}+K_t(e_t-\hat b_{t-1})$ follow slow drifts. Probabilistic forecasts take three common forms. Ensemble model output statistics (EMOS)~\cite{gneiting2005emos} fit a distribution to the ensemble mean $\bar x$ and variance $s^2$,
+\begin{equation}
+Y\mid X\sim\mathcal N\big(a+b\bar x,\;c+ds^2\big),
+\end{equation}
+by minimising the CRPS (with truncated or censored variants for bounded power). Quantile regression~\cite{koenker1978quantile} learns each quantile $q_\tau$ directly by minimising the pinball loss, with linear models, gradient boosting or neural networks. Conformal prediction wraps any point model with intervals $\hat y\pm q_{1-\alpha}(|r|)$ calibrated on held-out residuals $r$. Post-processing is reviewed in~\cite{vannitsem2021postprocessing}.
+
+\subsection{Scoring}
+
+For errors $e_t=\hat y_t-y_t$, bias, MAE and RMSE are $\bar e$, $\overline{|e|}$ and $\sqrt{\overline{e^2}}$, with $\text{RMSE}^2=\bar e^2+\sigma_e^2$ splitting systematic from random error. The MSE skill score against a reference is $\text{SS}=1-\text{MSE}/\text{MSE}_{\text{ref}}$, positive when the forecast beats the reference. For a quantile $q$ at level $\tau$ and for a predictive distribution $F$,
+\begin{align}
+L_\tau(y,q)&=\begin{cases}\tau(y-q), & y\ge q,\\(1-\tau)(q-y), & y<q,\end{cases}\\
+\text{CRPS}(F,y)&=\int_{-\infty}^{\infty}\big(F(x)-\mathbf 1\{x\ge y\}\big)^2dx,
+\end{align}
+both proper~\cite{gneiting2007scoring}; for an ensemble $x_1,\dots,x_M$, $\text{CRPS}=\frac1M\sum_i|x_i-y|-\frac1{2M^2}\sum_{i,j}|x_i-x_j|$~\cite{hersbach2000crps}. MAE is minimised by the median, RMSE by the mean and the pinball loss by the $\tau$-quantile, so the scoring rule must match the decision (Proposition~\ref{prop:bid}). Differences between two forecasts are tested with the Diebold-Mariano test~\cite{diebold1995comparing}. Percentage errors such as MAPE are unusable for PV and wind because the target is often zero.
+
+\subsection{Four design results}
+
+\begin{proposition}[Geographic smoothing]
+\label{prop:smooth}
+Let $e_1,\dots,e_N$ be site errors with mean zero, common variance $\sigma^2$ and mean pairwise correlation $\bar r$. The error of the site average has standard deviation
+\begin{equation}
+\sigma_{\bar e}=\sigma\sqrt{\frac{1+(N-1)\,\bar r}{N}}\;\xrightarrow[N\to\infty]{}\;\sigma\sqrt{\bar r}. \label{eq:smooth}
+\end{equation}
+\end{proposition}
+\begin{proof}
+$\operatorname{Var}\big(\sum_ie_i\big)=\sum_i\sigma^2+\sum_{i\ne j}\bar r\sigma^2=N\sigma^2+N(N-1)\bar r\sigma^2$; divide by $N^2$.
+\end{proof}
+Portfolio and national forecasts are therefore much more accurate than single sites, but never better than $\sigma\sqrt{\bar r}$: the part of the error shared by all sites, typically the timing of a front, cannot be diversified away.
+
+\begin{proposition}[When averaging two models helps]
+\label{prop:combine}
+Let two forecasts have errors with root mean squares $\sigma_1\le\sigma_2$ and correlation $\rho=\overline{e_1e_2}/(\sigma_1\sigma_2)$, and let $k=\sigma_2/\sigma_1$. The equal-weight average has a lower mean squared error than the better forecast if and only if
+\begin{equation}
+k^2+2\rho k<3 . \label{eq:combine}
+\end{equation}
+\end{proposition}
+\begin{proof}
+The average has error $(e_1+e_2)/2$ and mean squared error $(\sigma_1^2+\sigma_2^2+2\rho\sigma_1\sigma_2)/4$, which is below $\sigma_1^2$ exactly when $\sigma_2^2+2\rho\sigma_1\sigma_2<3\sigma_1^2$; divide by $\sigma_1^2$.
+\end{proof}
+For highly correlated errors ($\rho=0.8$) the average helps only if the weaker model is within about 11\,\% of the better one ($k<1.11$); for $\rho=0.5$ the margin grows to 30\,\%. Blending pays when models are similarly good and fail differently, the classic result of forecast combination~\cite{bates1969combination}.
+
+\begin{proposition}[Optimal bid under asymmetric costs]
+\label{prop:bid}
+Let production $Y$ have distribution function $F$, and let each unit of shortfall below the bid $b$ cost $c_s$ and each unit of surplus cost $c_l$. The expected cost $\mathbb E[c_s(b-Y)^++c_l(Y-b)^+]$ is minimised by
+\begin{equation}
+b^*=F^{-1}\!\left(\frac{c_l}{c_l+c_s}\right). \label{eq:newsvendor}
+\end{equation}
+\end{proposition}
+\begin{proof}
+The derivative of the expected cost with respect to $b$ is $c_sF(b)-c_l(1-F(b))$, which is increasing in $b$ and zero at $F(b)=c_l/(c_l+c_s)$.
+\end{proof}
+This is the newsvendor result applied to energy trading~\cite{pinson2007trading}: if a shortfall costs three times as much as a surplus, the expected-cost-minimising bid is the 25\,\% quantile, not the median. A point forecast cannot express that; a probabilistic forecast can.
+
+\begin{lemma}[Time-averaged model fields]
+\label{lem:deacc}
+If a model reports a flux as its mean $\bar A_t$ over $[0,t]$ since the start of the run, the mean over $[t-\Delta,t]$ is $(t\bar A_t-(t-\Delta)\bar A_{t-\Delta})/\Delta$. If it reports an accumulation $S_t$ in J/m$^2$, the mean flux is $(S_t-S_{t-\Delta})/\Delta$ with $\Delta$ in seconds.
+\end{lemma}
+\begin{proof}
+$t\bar A_t$ and $S_t$ are the integrals of the flux over $[0,t]$; subtracting the integral over $[0,t-\Delta]$ leaves the integral over the interval, which is divided by its length.
+\end{proof}
+Section~\ref{sec:data} lists which operational models use which convention.
+
+\subsection{Yield and performance}
+
+Exceedance levels follow, under a normal approximation, from the P50 and the total relative uncertainty, $P_X=P_{50}(1-z_X\sigma_{\text{tot}})$ with $z_{90}=1.282$ and $z_{99}=2.326$; independent components add in quadrature, and the interannual component of an $N$-year mean shrinks as $\sigma_{\text{IAV}}/\sqrt N$. The performance ratio is $\text{PR}=(E_{AC}/P_{STC})/(H_{\text{POA}}/G_{STC})$ with $G_{STC}=1000$\,W/m$^2$~\cite{iec61724-1}. Lost energy during an outage is $E_{\text{lost}}=\sum_t\max(0,P^{\text{exp}}_t-P^{\text{meas}}_t)\,\Delta t$ with the expected power taken from a reference, and energy-based availability is $E_{\text{actual}}/(E_{\text{actual}}+E_{\text{lost}})$.

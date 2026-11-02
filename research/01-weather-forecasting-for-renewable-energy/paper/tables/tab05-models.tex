@@ -1,0 +1,24 @@
+% Table 5: operational models. Source data: data/literature/nwp_models.csv
+\begin{table*}[t]
+\centering\small
+\caption{\textbf{Operational weather models available as open data} (status November 2026). Grid spacing is approximate; open-data products are sometimes coarser than the native model. Source data: \texttt{data/literature/nwp\_models.csv}.}
+\label{tab:models}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}L{3.2cm}L{1.9cm}L{2.7cm}L{2.0cm}L{1.6cm}L{1.5cm}Y@{}}
+\toprule
+Model & Centre & Type & Grid & Range & Runs/day & Licence \\
+\midrule
+IFS HRES and ENS & ECMWF & physics; ENS 51 members & 9\,km (open 0.25$^\circ$) & 10 / 15 days & 4 & CC-BY-4.0 \\
+AIFS Single and ENS & ECMWF & machine learning & about 0.25$^\circ$ & 15 days & 4 & CC-BY-4.0 \\
+Extended range & ECMWF & physics ensemble & ensemble & 46 days & 1 & CC-BY-4.0 (partly open) \\
+GFS and GEFS & NOAA & physics; GEFS 31 members & 0.25$^\circ$ & 16 days & 4 & public domain \\
+AIGFS, AIGEFS, HGEFS & NOAA & machine learning and hybrid & about 0.25$^\circ$ & 16 days & 4 & public domain \\
+ICON, ICON-EU & DWD & physics, with ensembles & 13\,km, 6.5\,km & 7.5, 5 days & 4, 8 & open, with attribution \\
+ICON-D2 (EPS, RUC) & DWD & convection-permitting & about 2\,km & 2 days (RUC 14\,h) & 8 (RUC 24) & open, with attribution \\
+MOSMIX & DWD & statistical post-processing & 5,400 stations & 10 days & several & open, with attribution \\
+AROME, ARPEGE & M\'et\'eo-France & physics & 1.3\,km, 5\,km & 2, 4 days & several & Etalab open licence \\
+HRRR & NOAA & rapid refresh & 3\,km (USA) & 18--48\,h & 24 & public domain \\
+CAMS global & Copernicus & aerosols and dust & about 40\,km & 5 days & 2 & Copernicus licence \\
+\bottomrule
+\end{tabularx}
+\end{table*}

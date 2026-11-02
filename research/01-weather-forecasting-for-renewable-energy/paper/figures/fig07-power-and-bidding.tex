@@ -1,0 +1,46 @@
+% Figure 7: power-curve amplification and bidding.
+% Data: data/processed/fig07a_power_curve.csv, fig07b_partial_load_elasticity.csv, fig07c_bid_cost_vs_quantile.csv
+% Script: code/06_wind_power_and_bidding.py
+\begin{figure*}[t]
+\centering
+\readcsv{\datadir/fig07a_power_curve.csv}\pcurve
+\readcsv{\datadir/fig07b_partial_load_elasticity.csv}\elast
+\readcsv{\datadir/fig07c_bid_cost_vs_quantile.csv}\bidcost
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=3 by 1, horizontal sep=1.3cm},
+  paper, width=0.345\textwidth, height=5.0cm]
+% ---------------- (a) power curve
+\nextgroupplot[title={(a) Power curve, \valTurbine}, xlabel={Hub-height wind speed (m/s)},
+  ylabel={Power (share of rated)}, xmin=0, xmax=26, ymin=0, ymax=1.1, xtick={0,3,6,9,12,15,20,25},
+  legend style={at={(0.98,0.30)},anchor=south east}]
+\fill[ewfPanel] (axis cs:3,0) rectangle (axis cs:12,1.1);
+\node[font=\scriptsize,text=ewfInkSecondary,align=center] at (axis cs:7.5,0.93) {partial\\load};
+\node[font=\scriptsize,text=ewfInkSecondary,align=center] at (axis cs:18.5,0.86) {full load};
+\addplot[ewfC1,line width=1.4pt] table[x=wind_speed_hub_ms,y=power_normalised]{\pcurve}; \addlegendentry{manufacturer curve}
+\addplot[ewfInk,dashed,line width=1.0pt,domain=3:12,samples=40] {(x^3-27)/(1728-27)}; \addlegendentry{$k(v^3-v_{ci}^3)$}
+% ---------------- (b) elasticity
+\nextgroupplot[title={(b) Power error per unit of wind error}, xlabel={Elasticity $\eta$ at partial load},
+  ylabel={Share of forecast pairs}, xmin=2.45, xmax=5.05, ymin=0, ymax=0.27, ybar, bar width=4.2pt,
+  yticklabel style={/pgf/number format/.cd,fixed,precision=2}, grid=none, ymajorgrids]
+\addplot[fill=ewfC1,draw=none] table[x=elasticity_bin_mid,y=share_of_pairs]{\elast};
+\draw[ewfInk,dashed,line width=1.0pt] (axis cs:3,0) -- (axis cs:3,0.27);
+\node[font=\scriptsize,text=ewfInk,anchor=north west,align=left] at (axis cs:3.05,0.265) {Proposition~\ref{prop:cubic}: $\eta\ge3$\\for a cubic curve};
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=north east,align=right] at (axis cs:5.0,0.13) {median \valElasticityMedian};
+% ---------------- (c) bidding
+\nextgroupplot[title={(c) Expected cost of the bid (July 2025)}, xlabel={Quantile $\tau$ bid},
+  ylabel={Cost per unit of capacity}, xmin=0.05, xmax=0.95, ymin=0.06, ymax=0.32,
+  yticklabel style={/pgf/number format/.cd,fixed,precision=2},
+  legend style={at={(0.02,0.98)},anchor=north west,font=\tiny}]
+\addplot[ewfC1,line width=1.4pt] table[x=tau,y=cost_asymmetric]{\bidcost}; \addlegendentry{shortfall cost 3, surplus 1}
+\addplot[ewfC2,line width=1.4pt] table[x=tau,y=cost_symmetric]{\bidcost}; \addlegendentry{equal costs}
+\addplot[ewfC1,dashed,line width=0.8pt,forget plot] table[x=tau,y=cost_asymmetric_point_forecast]{\bidcost};
+\addplot[ewfC2,dashed,line width=0.8pt,forget plot] table[x=tau,y=cost_symmetric_point_forecast]{\bidcost};
+\draw[ewfInkMuted,dotted,line width=0.9pt] (axis cs:\valTauStar,0.06) -- (axis cs:\valTauStar,0.215);
+\draw[ewfInkMuted,dotted,line width=0.9pt] (axis cs:0.5,0.06) -- (axis cs:0.5,0.215);
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=south] at (axis cs:\valTauStar,0.215) {$\tau^*=\valTauStar$};
+\node[font=\scriptsize,text=ewfInkSecondary,anchor=south] at (axis cs:0.5,0.215) {$0.5$};
+\end{groupplot}
+\end{tikzpicture}
+\caption{\textbf{The power curve amplifies wind errors, and asymmetric costs call for a quantile bid.} Pseudo power from observed and forecast 10\,m winds scaled to 120\,m (bias-corrected multi-model mean, day-ahead). (a) The turbine's power curve and its cubic idealisation between cut-in and rated speed. (b) Ratio of logarithmic power error to logarithmic wind-speed error for \valElasticityN{} pairs in which forecast and observation are both at partial load; values outside 2.5--5 are counted in the end bins. (c) Expected test cost of bidding the $\tau$-quantile of conditional quantile forecasts (solid) against bidding the point forecast (dashed); the dotted lines mark the optima predicted by Proposition~\ref{prop:bid}.}
+\label{fig:power}
+\end{figure*}

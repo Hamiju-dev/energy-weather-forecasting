@@ -1,0 +1,6 @@
+\section{Limitations}
+\label{sec:limits}
+
+The requirements in Sections~\ref{sec:tech} to~\ref{sec:horizons} summarise practice and literature; they are an expert synthesis, not a survey, and their thresholds (for example crane wind limits) must always be taken from the equipment and permit at hand. Market rules and data licences change; the facts quoted carry access dates and sources so that they can be rechecked.
+
+The case study covers one summer and verifies 10\,m wind and 2\,m temperature at airports, not hub-height wind, irradiance or plant output: no openly accessible archive of measured irradiance and plant power for 2025 was part of the data set, and station winds include representativeness errors that a 0.25$^\circ$ model cannot resolve, which is one reason the raw biases are large. The pseudo power of Section~\ref{sec:case} isolates the power-curve effect but ignores wakes, availability, the real wind profile and density. The bias correction is deliberately simple, and established post-processing (EMOS, quantile regression, gradient boosting with many predictors) would likely add more. Winter, with stronger winds, frontal systems, low stratus and snow, would test the models differently, and the comparison between IFS and AIFS reflects the operational versions of 2025 only.
