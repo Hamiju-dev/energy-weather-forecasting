@@ -11,4 +11,6 @@
 | `05_batch4.md` | spring-select, date-picker, calendar, stretch-switch, animated-file-upload, stepper |
 | `06_batch5.md` | alert, notification-stack, skeleton, loader, directional-tooltip |
 
-Still missing: earnings, activity-heatmap, batch 6.
+| `07_batch6.md` | advanced-data-table, smooth-accordion, badge, not-found |
+
+Still missing: earnings, activity-heatmap.
