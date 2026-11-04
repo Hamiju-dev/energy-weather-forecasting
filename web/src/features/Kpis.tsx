@@ -13,7 +13,7 @@ import type { PlantView } from "./view";
 function Tile({ icon, label, value, unit, digits, sub, extra, tip }: { icon: ReactNode; label: string; value: number | null; unit: string; digits: number; sub?: ReactNode; extra?: ReactNode; tip: string }) {
   return (
     <div className="min-w-0 rounded-2xl border border-line bg-surface p-4 shadow-card">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
         <Tip content={tip} side="bottom" wide><span className="flex cursor-help items-center gap-1.5 text-[12.5px] text-muted [&>svg]:size-3.5">{icon}{label}</span></Tip>
         {extra}
       </div>
@@ -62,7 +62,8 @@ export function Kpis({ v, history }: { v: PlantView; history: HistoryEntry[] }) 
         tip="Blend energy for tomorrow. The badge compares the latest model runs with the runs before them (average over models)." sub={range(v.tomorrow)}
         extra={delta != null && (
           <Badge tone={Math.abs(delta) < 5 ? "neutral" : "accent"} title="Change against the previous model runs">
-            {delta >= 0 ? <ArrowUpRight className="size-3" /> : <ArrowDownRight className="size-3" />}{signed(delta, 0)} % vs last run
+            {Math.round(delta) > 0 ? <ArrowUpRight className="size-3" /> : Math.round(delta) < 0 ? <ArrowDownRight className="size-3" /> : null}
+            {signed(delta, 0)} %<span className="hidden sm:inline"> vs last run</span>
           </Badge>
         )} />
       <Tile icon={<SunMedium />} label={after ? dateLabel(after) : "Day after"} value={dayAfter} unit={scale.energy} digits={digits(dayAfter)} tip="Blend energy for the day after tomorrow." sub={after && !complete(after) ? "partial day" : range(after)} />

@@ -2,10 +2,30 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Plant } from "../lib/api";
+import { SNAPSHOT } from "../lib/snapshot";
 
 /* OpenStreetMap map of the plants. Click to move the selected plant (when onPick is given).
    Tiles: © OpenStreetMap contributors (ODbL), loaded from tile.openstreetmap.org. */
-export function PlantMap({ plants, selected = 0, onPick, onSelect, height = 260 }: {
+export function PlantMap(props: Parameters<typeof LiveMap>[0]) {
+  // a snapshot page may not load map tiles from other sites, so it shows the coordinates instead
+  if (SNAPSHOT) {
+    const { plants, height = 260 } = props;
+    return (
+      <div style={{ height }} className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border border-line bg-surface-raised p-4 text-center">
+        {plants.map((p) => (
+          <a key={p.name} href={`https://www.openstreetmap.org/?mlat=${p.latitude}&mlon=${p.longitude}#map=11/${p.latitude}/${p.longitude}`} target="_blank" rel="noreferrer"
+            className="focus-ring rounded text-[13px] text-ink underline decoration-[var(--border-hover)] underline-offset-4 hover:decoration-[var(--accent)]">
+            {p.name}: {p.latitude.toFixed(3)}° N, {p.longitude.toFixed(3)}° E
+          </a>
+        ))}
+        <span className="text-[11.5px] text-muted">Opens OpenStreetMap. The interactive map needs the local server.</span>
+      </div>
+    );
+  }
+  return <LiveMap {...props} />;
+}
+
+function LiveMap({ plants, selected = 0, onPick, onSelect, height = 260 }: {
   plants: Pick<Plant, "name" | "latitude" | "longitude" | "capacity_dc_kwp">[]; selected?: number; onPick?: (lat: number, lon: number) => void; onSelect?: (i: number) => void; height?: number;
 }) {
   const el = useRef<HTMLDivElement>(null);

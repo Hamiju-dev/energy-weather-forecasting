@@ -11,6 +11,7 @@ import { Segmented } from "../components/ui/segmented";
 import { Alert } from "../components/ui/alert";
 import { api, COLOUR_VAR, LABELS, MODEL_KEYS, type Plant } from "../lib/api";
 import { DEFAULT_PLANT, type App } from "./store";
+import { SNAPSHOT } from "../lib/snapshot";
 import { PlantMap } from "./PlantMap";
 
 const STEPS = [{ title: "Location" }, { title: "Modules" }, { title: "Inverter" }, { title: "Forecast" }];
@@ -56,7 +57,7 @@ export function PlantSheet({ app, open, onClose }: { app: App; open: boolean; on
             {step < STEPS.length - 1 ? (
               <Button variant="primary" onClick={() => setStep(step + 1)}>Next</Button>
             ) : (
-              <Button variant="primary" onClick={() => apply(true)} disabled={problems.length > 0}><Play className="size-3.5" />Run forecast</Button>
+              <Button variant="primary" onClick={() => apply(true)} disabled={problems.length > 0 || !!SNAPSHOT} title={SNAPSHOT ? "Needs the local server" : undefined}><Play className="size-3.5" />Run forecast</Button>
             )}
           </div>
         </div>

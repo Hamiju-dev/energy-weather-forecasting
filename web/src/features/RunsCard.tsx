@@ -1,3 +1,4 @@
+import { nowMs } from "../lib/clock";
 import { Download, FileJson, FileSpreadsheet, FileText, Package } from "lucide-react";
 import { Card } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
@@ -30,7 +31,7 @@ export function RunsCard({ v, result, jobId }: { v: PlantView; result: ForecastR
           </thead>
           <tbody>
             {result.runs.map((r) => {
-              const ageH = (Date.now() - Date.parse(r.run_utc)) / 3.6e6;
+              const ageH = (nowMs() - Date.parse(r.run_utc)) / 3.6e6;
               return (
                 <tr key={r.model} className="border-b border-line last:border-0">
                   <td className="py-2 pr-3"><span className="flex items-center gap-1.5 font-medium text-ink"><span className="inline-block size-2 rounded-full" style={{ background: COLOUR_VAR[r.model] }} />{r.label}</span></td>

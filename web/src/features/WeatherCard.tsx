@@ -1,3 +1,4 @@
+import { nowMs } from "../lib/clock";
 import { useState } from "react";
 import { Card } from "../components/ui/card";
 import { Segmented } from "../components/ui/segmented";
@@ -39,7 +40,7 @@ export function WeatherCard({ v }: { v: PlantView }) {
   return (
     <Card title="Weather behind the forecast" subtitle={text}
       actions={<Segmented size="sm" label="Quantity" value={tab} onChange={setTab} options={[{ value: "ghi", label: "Irradiance" }, { value: "cloud", label: "Clouds" }, { value: "temp", label: "Temperature" }, { value: "wind", label: "Wind" }]} />}>
-      <TimeChart key={tab} t={s.t} series={series} tz={v.tz} unit={unit} digits={digits} height={220} shadeNight={s.ghi.clearsky} nowMs={Date.now()} minY0={tab !== "temp"}
+      <TimeChart key={tab} t={s.t} series={series} tz={v.tz} unit={unit} digits={digits} height={220} shadeNight={s.ghi.clearsky} nowMs={nowMs()} minY0={tab !== "temp"}
         ariaLabel={`Weather: ${tab}`} />
     </Card>
   );

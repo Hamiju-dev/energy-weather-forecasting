@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { SNAPSHOT } from "../lib/snapshot";
 import { api, waitForJob, type ForecastResult, type HistoryEntry, type ModelKey, type Plant } from "../lib/api";
 
 /* App state: plants (kept in this browser), forecast settings, the running job and its result. */
@@ -20,15 +21,15 @@ const save = (key: string, v: unknown) => { try { localStorage.setItem(key, JSON
 export type Status = "idle" | "running" | "done" | "error";
 
 export function useApp() {
-  const [plants, setPlantsState] = useState<Plant[]>(() => load("ewf-plants", [DEFAULT_PLANT]));
+  const [plants, setPlantsState] = useState<Plant[]>(() => (SNAPSHOT ? [SNAPSHOT.plant] : load("ewf-plants", [DEFAULT_PLANT])));
   const [selected, setSelected] = useState(0);
   const [settings, setSettingsState] = useState<Settings>(() => load("ewf-settings", { hours: 120, models: ["ifs", "aifs", "gfs"] }));
-  const [status, setStatus] = useState<Status>("idle");
+  const [status, setStatus] = useState<Status>(SNAPSHOT ? "done" : "idle");
   const [messages, setMessages] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<ForecastResult | null>(null);
+  const [result, setResult] = useState<ForecastResult | null>(SNAPSHOT?.result ?? null);
   const [jobId, setJobId] = useState<string | null>(null);
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [history, setHistory] = useState<HistoryEntry[]>(SNAPSHOT?.history ?? []);
   const [prevStatus, setPrevStatus] = useState<Status>("idle");
   const abort = useRef<AbortController | null>(null);
 
@@ -36,10 +37,12 @@ export function useApp() {
   const setSettings = useCallback((s: Settings) => { setSettingsState(s); save("ewf-settings", s); }, []);
 
   const refreshHistory = useCallback(async (p: Plant) => {
+    if (SNAPSHOT) return;
     try { setHistory(await api.history(p)); } catch { setHistory([]); }
   }, []);
 
   const run = useCallback(async (opts?: { plants?: Plant[]; settings?: Settings }) => {
+    if (SNAPSHOT) return;                       // no server in a snapshot build
     const ps = opts?.plants ?? plants, st = opts?.settings ?? settings;
     abort.current?.abort();
     const ctrl = new AbortController();
@@ -63,6 +66,7 @@ export function useApp() {
 
   /** Forecast from the runs before the latest ones, so the run-to-run chart has a second point. */
   const runPrevious = useCallback(async () => {
+    if (SNAPSHOT) return;
     setPrevStatus("running");
     try {
       const { job } = await api.startForecast({ plants, hours: settings.hours, models: settings.models, previous_run: true });

@@ -1,3 +1,4 @@
+import { nowMs } from "../lib/clock";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bell, CircleAlert, CircleCheck, Info, TriangleAlert, X } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -20,7 +21,7 @@ export function events(v: PlantView, result: ForecastResult, history: HistoryEnt
   const out: Event[] = [];
   for (const p of result.problems) out.push({ id: `p-${p}`, tone: "critical", title: "Model left out", text: p });
   for (const r of result.runs) {
-    const h = (Date.now() - Date.parse(r.run_utc)) / 3.6e6;
+    const h = (nowMs() - Date.parse(r.run_utc)) / 3.6e6;
     if (h > 18) out.push({ id: `old-${r.model}`, tone: "warning", title: `${r.label} run is ${Math.round(h)} h old`, text: "A newer run may not have reached the horizon yet. Try again later or shorten the horizon." });
   }
   const c = v.r.clipping;
@@ -57,7 +58,7 @@ export function StatusFeed({ v, result, history }: { v: PlantView; result: Forec
         {urgent > 0 && <Badge tone="warning" dot>{`${urgent} to check`}</Badge>}
         {list.length > 3 && <button type="button" onClick={() => setExpanded(!expanded)} className="focus-ring rounded text-[12px] text-muted hover:text-ink">{expanded ? "Stack" : `Show all ${list.length}`}</button>}
       </>}>
-      <div className="relative" style={{ minHeight: expanded ? undefined : shown.length ? 96 + Math.min(2, shown.length - 1) * 10 : 60 }}>
+      <div className="relative overflow-x-clip" style={{ minHeight: expanded ? undefined : shown.length ? 96 + Math.min(2, shown.length - 1) * 10 : 60 }}>
         <AnimatePresence mode="popLayout">
           {shown.length === 0 && <motion.p key="none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-4 text-center text-[13px] text-muted">All read.</motion.p>}
           {shown.map((e, i) => {
@@ -74,7 +75,7 @@ export function StatusFeed({ v, result, history }: { v: PlantView; result: Forec
                 className={`cursor-grab rounded-xl border border-line bg-surface p-3 shadow-card active:cursor-grabbing ${expanded ? "mb-2" : ""}`}>
                 <div className="flex items-start gap-2.5">
                   <I className={`mt-0.5 size-4 shrink-0 ${colour[e.tone]}`} aria-hidden />
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 [overflow-wrap:anywhere]">
                     <p className="text-[12.5px] font-semibold text-ink">{e.title}</p>
                     <p className="mt-0.5 text-[12px] leading-snug text-ink-2">{e.text}</p>
                   </div>

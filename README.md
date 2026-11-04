@@ -81,6 +81,8 @@ Open http://127.0.0.1:8000. The plant is set up in a four-step wizard (location 
 
 For front-end development run `ewf serve` and, in `web/`, `npm run dev` (port 5173, `/api` is proxied).
 
+**Snapshot page.** With `ewf serve` running, `node scripts/build-snapshot.mjs` in `web/` runs a fresh forecast for the example plant and writes `web/dist-snapshot/ewf-snapshot.html`: the whole dashboard in one file with that forecast embedded, for viewing where the server cannot run. It is clickable but cannot start new forecasts, load previous runs, compare measured data or download files; "now" and "today" refer to when it was made, and the map is replaced by coordinates.
+
 The earlier Streamlit app still works as a simple alternative: `pip install -e ".[app]"` and `streamlit run app/streamlit_app.py`.
 
 ### From Python

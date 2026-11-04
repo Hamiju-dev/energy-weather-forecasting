@@ -33,6 +33,7 @@ export function ActualsCard({ v, app }: { v: PlantView; app: App }) {
   return (
     <Card title="Forecast vs actuals" subtitle="Load measured AC power (CSV) for hours the forecast covers, for example this morning, and see how each model did."
       actions={<Segmented size="sm" label="Time zone of the file" value={tz} onChange={setTz} options={[{ value: "UTC", label: "Times in UTC" }, { value: "local", label: `Times in ${v.tz}` }]} />}>
+      {!app.jobId && <div className="mb-3"><Alert tone="info" title="Needs the local server">The comparison runs on the server that made the forecast (<code className="font-mono text-[12px]">ewf serve</code>).</Alert></div>}
       <FileDrop compact accept={[".csv", ".txt"]} busy={busy} onFile={upload} title="Drop a CSV with time and power"
         subtitle="First date column = start of each period; power in kW (or MW if the column name says so)" />
       {err && <div className="mt-3"><Alert tone="critical" title="Could not compare">{err}</Alert></div>}

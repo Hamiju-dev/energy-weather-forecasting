@@ -12,7 +12,9 @@ import { Accordion } from "./components/ui/accordion";
 import { CommandPalette, type Command } from "./components/ui/command-palette";
 import { Heatmap } from "./components/charts/Heatmap";
 import { api, LABELS, type SeriesKey } from "./lib/api";
-import { relative } from "./lib/time";
+import { relative, dateTime } from "./lib/time";
+import { SNAPSHOT } from "./lib/snapshot";
+import logo from "./assets/logo.svg";
 import { useApp } from "./features/store";
 import { usePlantView } from "./features/view";
 import { PlantSheet } from "./features/PlantSheet";
@@ -69,7 +71,7 @@ export default function App() {
       <header className="sticky top-0 z-40 border-b border-line bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-3 px-4 sm:px-6">
           <div className="flex items-center gap-2.5">
-            <img src="/favicon.svg" alt="" className="size-7" />
+            <img src={logo} alt="" className="size-7" />
             <div className="hidden leading-tight sm:block">
               <p className="text-[13px] font-semibold text-ink">ewf</p>
               <p className="text-[11px] text-muted">PV power forecast</p>
@@ -94,15 +96,24 @@ export default function App() {
             <Button variant="secondary" size="icon" onClick={() => setDark(!dark)} aria-label={dark ? "Light mode" : "Dark mode"} title={dark ? "Light mode" : "Dark mode"}>
               {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
             </Button>
-            <Button variant="primary" onClick={() => app.run()} loading={running}>
-              {!running && <Play className="size-3.5" />}<span className="hidden sm:inline">{running ? "Running" : app.result ? "Update" : "Run forecast"}</span>
-            </Button>
+            {SNAPSHOT ? (
+              <Badge tone="accent" dot title="New forecasts need the local server">Snapshot</Badge>
+            ) : (
+              <Button variant="primary" onClick={() => app.run()} loading={running}>
+                {!running && <Play className="size-3.5" />}<span className="hidden sm:inline">{running ? "Running" : app.result ? "Update" : "Run forecast"}</span>
+              </Button>
+            )}
           </div>
         </div>
         {running && <LineLoader className="absolute right-0 bottom-0 left-0 h-0.5 rounded-none" label="Forecast running" />}
       </header>
 
       <main className="mx-auto max-w-[1400px] space-y-4 px-4 py-5 sm:px-6">
+        {SNAPSHOT && (
+          <Alert tone="info" title={`Snapshot of a real forecast made ${dateTime(SNAPSHOT.created_utc, SNAPSHOT.plant.timezone)} (${SNAPSHOT.plant.timezone})`}>
+            Everything here is clickable, but it shows that one forecast: running new forecasts, loading previous runs, comparing with measured data and downloads need the local server (<code className="font-mono text-[12px]">ewf serve</code>). Times such as "now" and "today" refer to when the snapshot was made.
+          </Alert>
+        )}
         <AnimatePresence>
           {app.status === "error" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

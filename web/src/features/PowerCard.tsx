@@ -1,3 +1,4 @@
+import { nowMs } from "../lib/clock";
 import { useMemo, useState } from "react";
 import { Card } from "../components/ui/card";
 import { Switch } from "../components/ui/switch";
@@ -58,7 +59,7 @@ export function PowerCard({ v, visible, setVisible }: { v: PlantView; visible: R
         refLines={limit ? [{ value: limit / scale.div, label: `${r.plant.export_limit_kw && r.plant.export_limit_kw === limit ? "Export" : "AC"} limit ${fmt(limit / scale.div, 2)} ${scale.power}` }] : []}
         spans={clipSpans}
         shadeNight={sl(r.series.ghi.clearsky)}
-        nowMs={Date.now()}
+        nowMs={nowMs()}
         tz={v.tz}
         unit={scale.power}
         digits={2}

@@ -1,3 +1,5 @@
+import { nowMs } from "./clock";
+
 /** Times in the plant's own time zone (the API sends UTC milliseconds or ISO strings). */
 
 const fmts = new Map<string, Intl.DateTimeFormat>();
@@ -33,7 +35,7 @@ export const dateLabel = (iso: string) =>
   new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(iso + "T12:00:00Z"));
 
 export const relative = (t: number | string) => {
-  const h = (Date.now() - toMs(t)) / 3.6e6;
+  const h = (nowMs() - toMs(t)) / 3.6e6;
   if (h < 1) return `${Math.max(1, Math.round(h * 60))} min ago`;
   if (h < 48) return `${Math.round(h)} h ago`;
   return `${Math.round(h / 24)} days ago`;
