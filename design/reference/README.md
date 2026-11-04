@@ -11,5 +11,6 @@
 | `05_batch4.md` | spring-select, date-picker, calendar, stretch-switch, animated-file-upload, stepper |
 | `06_batch5.md` | alert, notification-stack, skeleton, loader, directional-tooltip |
 | `07_batch6.md` | advanced-data-table, smooth-accordion, badge, not-found |
+| `08_earnings_activity_heatmap.md` | earnings, activity-heatmap (replace any earlier partial entries) |
 
-Still missing: earnings, activity-heatmap.
+Not shown on the site and to be written in this repo: `lib/utils` (cn), `lib/motion-tokens` (plus springMorph, springResponsive), `lib/chart-primitives`, `lib/dashboard-chart-utils`, the `--shadow-elevated` token.
