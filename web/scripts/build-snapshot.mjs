@@ -2,6 +2,7 @@
 //
 //   ewf serve                          (in another terminal)
 //   node scripts/build-snapshot.mjs [--server http://127.0.0.1:8000] [--hours 120]
+//   node scripts/build-snapshot.mjs --reuse     (rebuild the page from the last stored forecast)
 //
 // Writes dist-snapshot/ewf-snapshot.html: page content without <html>/<head>/<body> wrappers
 // (the form a claude.ai artifact expects; browsers also open it). Nothing is simulated: the
@@ -22,21 +23,26 @@ const get = async (path, init) => {
   return r.json();
 };
 
-const plant = await get("/api/example-plant");
-const { job } = await get("/api/forecast", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ plants: [plant], hours }) });
-let state;
-for (;;) {
-  state = await get(`/api/jobs/${job}`);
-  if (state.status !== "running") break;
-  await new Promise((r) => setTimeout(r, 1000));
+let snapshot;
+if (process.argv.includes("--reuse")) {
+  snapshot = JSON.parse(readFileSync(".snapshot/snapshot.json", "utf8"));
+} else {
+  const plant = await get("/api/example-plant");
+  const { job } = await get("/api/forecast", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ plants: [plant], hours }) });
+  let state;
+  for (;;) {
+    state = await get(`/api/jobs/${job}`);
+    if (state.status !== "running") break;
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+  if (state.status !== "done") throw new Error(state.error ?? "forecast failed");
+  const history = await get("/api/history", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ plant }) });
+  snapshot = { result: state.result, history, plant, created_utc: state.result.created_utc };
 }
-if (state.status !== "done") throw new Error(state.error ?? "forecast failed");
-const history = await get("/api/history", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ plant }) });
-const snapshot = { result: state.result, history, plant, created_utc: state.result.created_utc };
 
 // kept outside dist-snapshot/, which vite empties on every build
 mkdirSync(".snapshot", { recursive: true });
-writeFileSync(".snapshot/snapshot.json", JSON.stringify(snapshot));
+if (!process.argv.includes("--reuse")) writeFileSync(".snapshot/snapshot.json", JSON.stringify(snapshot));
 execFileSync("npx", ["vite", "build", "--mode", "snapshot"], { stdio: "inherit", env: { ...process.env, EWF_SNAPSHOT: ".snapshot/snapshot.json" } });
 
 const assets = readdirSync("dist-snapshot/assets");

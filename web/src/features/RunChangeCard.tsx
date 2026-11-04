@@ -18,7 +18,7 @@ export function RunChangeCard({ v, app }: { v: PlantView; app: App }) {
   // the chart needs at least one model with two runs for the chosen day
   const runs = Math.max(0, ...v.models.map((m) => app.history.filter((e) => e.model === m && d && e.energy_kwh[d] != null).length));
   return (
-    <Card title="Run-to-run changes" subtitle="Energy for one day from each model run seen so far. Large jumps mean an uncertain day."
+    <Card title="Run to run" meta={v.scale.energy} info="Energy for one day from each model run seen so far. Large jumps between runs mean an uncertain day."
       actions={dates.length > 0 && <Segmented size="sm" label="Day" value={d} onChange={setDate} options={dates.slice(0, 6).map((x) => ({ value: x, label: dateLabel(x).split(" ")[0] }))} />}>
       {d && runs > 1 ? (
         <>
@@ -30,7 +30,7 @@ export function RunChangeCard({ v, app }: { v: PlantView; app: App }) {
       ) : (
         <div className="flex flex-col items-center gap-3 py-6 text-center">
           <span className="grid size-10 place-items-center rounded-xl bg-surface-raised text-muted"><History className="size-5" /></span>
-          <p className="max-w-sm text-[13px] text-ink-2">Only one run so far. Each forecast you run is remembered; load the previous runs now to compare.</p>
+          <p className="text-[13px] text-ink-2">One run so far.</p>
           <Button variant="secondary" size="sm" disabled={!!SNAPSHOT} loading={app.prevStatus === "running"} onClick={app.runPrevious}>Load previous runs</Button>
           {app.prevStatus === "error" && <p className="text-[12px] text-critical">The previous runs could not be loaded.</p>}
         </div>

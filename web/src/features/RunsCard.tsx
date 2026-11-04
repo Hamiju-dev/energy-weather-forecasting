@@ -17,7 +17,7 @@ export function RunsCard({ v, result, jobId }: { v: PlantView; result: ForecastR
     { kind: "zip" as const, label: "Everything (zip)", icon: <Package /> },
   ];
   return (
-    <Card title="Model runs and downloads" subtitle="The newest run of each model that reaches the horizon">
+    <Card title="Model runs" info="The newest run of each model that reaches the forecast horizon.">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[440px] text-[12.5px]">
           <thead>

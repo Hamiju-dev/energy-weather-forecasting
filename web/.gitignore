@@ -3,3 +3,4 @@ dist/
 dist-snapshot/
 *.tsbuildinfo
 .snapshot/
+dist-kit/

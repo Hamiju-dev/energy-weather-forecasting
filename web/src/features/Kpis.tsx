@@ -48,7 +48,7 @@ export function Kpis({ v, history }: { v: PlantView; history: HistoryEntry[] }) 
   };
   const range = (date: string | null) => {
     const s = date ? v.spread(date) : null;
-    return s ? `models ${fmt(s[0] / scale.div, autoDigits(s[1] / scale.div))}–${fmt(s[1] / scale.div, autoDigits(s[1] / scale.div))}` : null;
+    return s ? `Range ${fmt(s[0] / scale.div, autoDigits(s[1] / scale.div))}–${fmt(s[1] / scale.div, autoDigits(s[1] / scale.div))}` : null;
   };
   const complete = (date: string | null) => r.daily.find((d) => d.date === date)?.complete ?? false;
   const delta = runDelta(history, v.tomorrow, v.models);
@@ -57,8 +57,8 @@ export function Kpis({ v, history }: { v: PlantView; history: HistoryEntry[] }) 
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       <Tile icon={<Sunrise />} label="Today" value={today} unit={scale.energy} digits={digits(today)} tip="Blend energy for the whole local day. If the forecast starts after sunrise, the day is partial and says so."
-        sub={complete(v.today) ? range(v.today) : <span>partial day · {range(v.today)}</span>} />
-      <Tile icon={<Sun />} label={`Tomorrow, ${dateLabel(v.tomorrow).split(" ")[0]}`} value={tomorrow} unit={scale.energy} digits={digits(tomorrow)}
+        sub={complete(v.today) ? range(v.today) : `Partial · ${range(v.today)}`} />
+      <Tile icon={<Sun />} label="Tomorrow" value={tomorrow} unit={scale.energy} digits={digits(tomorrow)}
         tip="Blend energy for tomorrow. The badge compares the latest model runs with the runs before them (average over models)." sub={range(v.tomorrow)}
         extra={delta != null && (
           <Badge tone={Math.abs(delta) < 5 ? "neutral" : "accent"} title="Change against the previous model runs">
@@ -66,8 +66,8 @@ export function Kpis({ v, history }: { v: PlantView; history: HistoryEntry[] }) 
             {signed(delta, 0)} %<span className="hidden sm:inline"> vs last run</span>
           </Badge>
         )} />
-      <Tile icon={<SunMedium />} label={after ? dateLabel(after) : "Day after"} value={dayAfter} unit={scale.energy} digits={digits(dayAfter)} tip="Blend energy for the day after tomorrow." sub={after && !complete(after) ? "partial day" : range(after)} />
-      <Tile icon={<Gauge />} label="Peak power" value={r.peak_kw == null ? null : r.peak_kw / scale.div} unit={scale.power} digits={2}
+      <Tile icon={<SunMedium />} label={after ? dateLabel(after) : "Day after"} value={dayAfter} unit={scale.energy} digits={digits(dayAfter)} tip="Blend energy for the day after tomorrow." sub={after && !complete(after) ? "Partial" : range(after)} />
+      <Tile icon={<Gauge />} label="Peak" value={r.peak_kw == null ? null : r.peak_kw / scale.div} unit={scale.power} digits={2}
         tip="Highest 15-minute mean of the blend in the forecast window." sub={r.peak_utc ? `${dayShort(r.peak_utc, v.tz)}, ${hhmm(r.peak_utc, v.tz)}` : null} />
     </div>
   );

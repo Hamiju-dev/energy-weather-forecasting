@@ -36,7 +36,7 @@ export function Heatmap({ t, values, tz, capacity, unit, div }: {
   const narrow = width < 520;
   const LW = narrow ? 44 : 84, TOP = 18, gap = 1;
   const cw = Math.max(2, (width - LW - (cols - 1) * gap) / cols);
-  const ch = narrow ? 18 : 22;
+  const ch = narrow ? 18 : 30;
   const h = TOP + grid.days.length * (ch + 3);
   const level = (v: number | null | undefined) => (v == null ? -1 : v <= 0 ? 0 : clamp(Math.ceil((v / capacity) * STEPS), 1, STEPS));
   const cur = active ? grid.cells[active.r][grid.first + active.c] : undefined;
@@ -89,8 +89,7 @@ export function Heatmap({ t, values, tz, capacity, unit, div }: {
           </div>
         )}
       </div>
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[11.5px] text-muted">
-        <span>Blend power, local time. Dashed cells are outside the forecast window.</span>
+      <div className="mt-3 flex items-center justify-end text-[11.5px] text-muted">
         <span className="flex items-center gap-1.5">
           0
           <span className="flex gap-[2px]" aria-hidden>{Array.from({ length: STEPS + 1 }, (_, i) => <span key={i} className="h-2.5 w-3.5 rounded-[2px]" style={{ background: `var(--seq-${i})` }} />)}</span>

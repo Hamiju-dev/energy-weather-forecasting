@@ -43,14 +43,14 @@ export function PowerCard({ v, visible, setVisible }: { v: PlantView; visible: R
   const days = [...v.dayIndex.keys()];
   const clipH = r.clipping.hours.blend ?? 0;
   return (
-    <Card title="AC power forecast" subtitle={`15-minute means in ${scale.power}, local time (${v.tz}). The band is the range between models, not a probability interval.`}
+    <Card title="AC power" meta={`${scale.power} · 15 min · ${v.tz}`} info="15-minute means per model and their average (blend). The shaded band is the lowest to highest model, not a probability range. Grey columns are night; yellow marks time at the AC limit."
       actions={<Segmented size="sm" label="Days shown" value={day} onChange={setDay} options={[{ value: "all", label: "All" }, ...days.map((x) => ({ value: x, label: dateLabel(x).split(" ").slice(0, 2).join(" ") }))]} className="max-w-full overflow-x-auto scrollbar-none" />}>
-      <div className="mb-3 flex flex-wrap gap-x-5 gap-y-2">
+      <div className="mb-4 flex flex-wrap gap-x-5 gap-y-2">
         {[...v.models, "blend" as const].map((k) => (
           <Switch key={k} color={COLOUR_VAR[k]} checked={visible[k]} onChange={(on) => setVisible(k, on)}
             label={<span className="flex items-center gap-1.5"><span className="inline-block h-0.5 w-3.5 rounded-full" style={{ background: COLOUR_VAR[k], height: k === "blend" ? 3 : 2 }} />{LABELS[k]}</span>} />
         ))}
-        <Switch checked={visible.band} onChange={(on) => setVisible("band", on)} label={<span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3.5 rounded-sm bg-[var(--band)]" />Model range</span>} />
+        <Switch checked={visible.band} onChange={(on) => setVisible("band", on)} label={<span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3.5 rounded-sm bg-[var(--band)]" />Range</span>} />
       </div>
       <TimeChart
         t={sl(r.series.t)}
@@ -63,13 +63,10 @@ export function PowerCard({ v, visible, setVisible }: { v: PlantView; visible: R
         tz={v.tz}
         unit={scale.power}
         digits={2}
-        height={300}
+        height={420}
         ariaLabel={`AC power forecast for ${r.plant.name}`}
       />
-      <p className="mt-2 text-[12px] text-muted">
-        {clipH > 0 ? <>Blend at the limit for <span className="text-ink-2">{fmt(clipH, 1)} h</span> (yellow); power above it is lost to clipping. </> : limit ? "The blend stays below the limit in this window. " : "No AC limit set. "}
-        Grey areas are night.
-      </p>
+      {clipH > 0 && <p className="mt-2 text-[12px] text-muted">At the limit for <span className="tabular text-ink-2">{fmt(clipH, 1)} h</span></p>}
     </Card>
   );
 }

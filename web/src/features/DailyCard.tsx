@@ -46,7 +46,7 @@ export function DailyCard({ v }: { v: PlantView }) {
     : { label: `${LABELS[key]}, ${dateLabel(date)}`, value: total, unit: scale.energy, digits: autoDigits(total) };
 
   return (
-    <Card title="Energy per day" subtitle={row.complete ? `${fmt(row.specific_yield_kwh_per_kwp, 2)} kWh/kWp (blend)` : "Partial day: the forecast window does not cover all daylight"}
+    <Card title="Daily energy" meta={row.complete ? `${fmt(row.specific_yield_kwh_per_kwp, 2)} kWh/kWp` : "partial day"}
       actions={<Segmented size="sm" label="Day" value={date} onChange={(d) => { setDate(d); setScrub(null); }} options={days.map((d) => ({ value: d, label: dateLabel(d).split(" ")[0] }))} className="max-w-full overflow-x-auto scrollbar-none" />}>
       <div aria-live="polite">
         <p className="h-[18px] truncate text-[12.5px] text-muted">{readout.label}</p>
@@ -56,7 +56,7 @@ export function DailyCard({ v }: { v: PlantView }) {
         </p>
         <p className="mt-2 flex min-h-[24px] flex-wrap items-center gap-2 text-[12.5px] text-muted">
           {!row.complete && <Badge tone="warning" dot>Partial day</Badge>}
-          <span>models {fmt(lo, autoDigits(hi))}–{fmt(hi, autoDigits(hi))} {scale.energy}, spread {fmt(hi > 0 ? ((hi - lo) / blend) * 100 : 0, 0)} % of the blend</span>
+          <span className="tabular">Range {fmt(lo, autoDigits(hi))}–{fmt(hi, autoDigits(hi))} {scale.energy}</span>
         </p>
       </div>
 
@@ -100,10 +100,9 @@ export function DailyCard({ v }: { v: PlantView }) {
             <li key={k}>
               <button type="button" aria-pressed={on} onClick={() => setFocusKey(on ? null : k)} onMouseEnter={() => setFocusKey(k)} onMouseLeave={() => setFocusKey(null)} onFocus={() => setFocusKey(k)} onBlur={() => setFocusKey(null)}
                 className={`focus-ring flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-[background-color,opacity] ${on ? "bg-surface-hover" : "hover:bg-surface-hover"} ${focusKey && !on ? "opacity-55" : ""}`}>
-                <span className="grid size-8 shrink-0 place-items-center rounded-lg text-[11px] font-semibold" style={{ background: `color-mix(in srgb, ${COLOUR_VAR[k]} 14%, transparent)`, color: COLOUR_VAR[k] }}>{SHORT[k].slice(0, 2)}</span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-baseline justify-between gap-3 text-[13px]">
-                    <span className={k === "blend" ? "font-semibold text-ink" : "font-medium text-ink"}>{LABELS[k]}</span>
+                    <span className={k === "blend" ? "font-semibold text-ink" : "text-ink"}>{SHORT[k]}</span>
                     <span className="tabular font-medium text-ink">{fmt(e, autoDigits(e))} {scale.energy}</span>
                   </span>
                   <span className="mt-1.5 flex items-center gap-3">

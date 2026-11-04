@@ -31,11 +31,11 @@ export function ActualsCard({ v, app }: { v: PlantView; app: App }) {
   const d = (a?: (number | null)[]) => (a ?? []).map((x) => (x == null ? null : x / scale.div));
 
   return (
-    <Card title="Forecast vs actuals" subtitle="Load measured AC power (CSV) for hours the forecast covers, for example this morning, and see how each model did."
-      actions={<Segmented size="sm" label="Time zone of the file" value={tz} onChange={setTz} options={[{ value: "UTC", label: "Times in UTC" }, { value: "local", label: `Times in ${v.tz}` }]} />}>
-      {!app.jobId && <div className="mb-3"><Alert tone="info" title="Needs the local server">The comparison runs on the server that made the forecast (<code className="font-mono text-[12px]">ewf serve</code>).</Alert></div>}
-      <FileDrop compact accept={[".csv", ".txt"]} busy={busy} onFile={upload} title="Drop a CSV with time and power"
-        subtitle="First date column = start of each period; power in kW (or MW if the column name says so)" />
+    <Card title="Forecast vs actual" info="Upload measured AC power for hours the forecast covers, for example this morning. Errors use daylight periods only."
+      actions={<Segmented size="sm" label="Time zone of the file" value={tz} onChange={setTz} options={[{ value: "UTC", label: "UTC" }, { value: "local", label: "Local" }]} />}>
+      {!app.jobId && <p className="mb-3 text-[12px] text-muted">Needs the local server.</p>}
+      <FileDrop compact accept={[".csv", ".txt"]} busy={busy} onFile={upload} title="Upload CSV"
+        subtitle="Time and power columns, kW or MW" />
       {err && <div className="mt-3"><Alert tone="critical" title="Could not compare">{err}</Alert></div>}
       {res && res.periods === 0 && (
         <div className="mt-3"><Alert tone="warning" title="No overlap with the forecast">
