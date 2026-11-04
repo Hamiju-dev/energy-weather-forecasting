@@ -78,18 +78,31 @@ def load_plants(path: str | Path) -> list[Plant]:
     ``plants`` key holding a list.
     """
     path = Path(path)
-    text = path.read_text()
-    data = json.loads(text) if path.suffix.lower() == ".json" else yaml.safe_load(text)
+    return parse_plants(path.read_text(), path.suffix, source=str(path))
+
+
+def parse_plants(text: str, suffix: str = ".yaml", source: str = "input") -> list[Plant]:
+    """Parse plants from YAML or JSON text (see ``load_plants`` for the accepted shapes)."""
+    data = json.loads(text) if suffix.lower().endswith("json") else yaml.safe_load(text)
+    return plants_from_data(data, source)
+
+
+def plants_from_data(data, source: str = "input") -> list[Plant]:
+    """Build plants from already parsed data (mapping, list, or mapping with ``plants``)."""
     if isinstance(data, dict) and "plants" in data:
         data = data["plants"]
     if isinstance(data, dict):
         data = [data]
+    if not isinstance(data, list) or not data:
+        raise ValueError(f"no plants found in {source}")
     known = {f.name for f in fields(Plant)}
     plants = []
     for item in data:
+        if not isinstance(item, dict):
+            raise ValueError(f"each plant in {source} must be a mapping")
         unknown = set(item) - known
         if unknown:
-            raise ValueError(f"unknown plant fields in {path}: {sorted(unknown)}")
+            raise ValueError(f"unknown plant fields in {source}: {sorted(unknown)}")
         plants.append(Plant(**item))
     names = [p.name for p in plants]
     if len(set(names)) != len(names):

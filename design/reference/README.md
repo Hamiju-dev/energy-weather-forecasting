@@ -1,6 +1,6 @@
 # Design reference: EasyUI components (raw collection)
 
-`raw/` holds the component code and notes collected by hand from easyui.site (MIT licence), pasted batch by batch in the order received. These files are reference material only and are not imported by the app. A cleaned collection (`easyui-collection.md`) and `THIRD_PARTY_NOTICES.md` follow once all batches are in.
+`raw/` holds the component code and notes collected by hand from easyui.site (MIT licence), pasted batch by batch in the order received. These files are reference material only and are not imported by the app. The adapted components live in `web/src/components/ui/` (each file says what was changed and fixed); the licence notice is in `THIRD_PARTY_NOTICES.md`. Not reused: command-menu (it copied an install command to the clipboard and opened GitHub), not-found, magnetic-button, glass-navbar.
 
 | File | Content |
 |---|---|
@@ -13,4 +13,4 @@
 | `07_batch6.md` | advanced-data-table, smooth-accordion, badge, not-found |
 | `08_earnings_activity_heatmap.md` | earnings, activity-heatmap (replace any earlier partial entries) |
 
-Not shown on the site and to be written in this repo: `lib/utils` (cn), `lib/motion-tokens` (plus springMorph, springResponsive), `lib/chart-primitives`, `lib/dashboard-chart-utils`, the `--shadow-elevated` token.
+Not shown on the site and written in this repo (`web/src/lib/`): `lib/utils` (cn), `lib/motion-tokens` (plus springMorph, springResponsive), `lib/chart-primitives`, `lib/dashboard-chart-utils`, the `--shadow-elevated` token.

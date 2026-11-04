@@ -88,6 +88,17 @@ def cmd_runs(a) -> int:
     return 0
 
 
+def cmd_serve(a) -> int:
+    try:
+        import uvicorn
+    except ImportError:
+        print("The web app needs extra packages: pip install -e '.[web]'", file=sys.stderr)
+        return 1
+    print(f"Dashboard on http://{a.host}:{a.port}  (build the front end once with: cd web && npm install && npm run build)")
+    uvicorn.run("ewf.api:app", host=a.host, port=a.port)
+    return 0
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="ewf", description="PV power forecasts from open weather-model data.")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -118,6 +129,11 @@ def main(argv=None) -> int:
 
     e = sub.add_parser("example-plant", help="print an example plant file")
     e.set_defaults(func=lambda a: print(EXAMPLE, end="") or 0)
+
+    s = sub.add_parser("serve", help="start the web app (API and dashboard)")
+    s.add_argument("--host", default="127.0.0.1")
+    s.add_argument("--port", type=int, default=8000)
+    s.set_defaults(func=cmd_serve)
 
     a = p.parse_args(argv)
     return a.func(a)

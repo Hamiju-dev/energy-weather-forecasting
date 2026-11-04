@@ -2,7 +2,7 @@
 
 PV power forecasts from open weather-model data, and the research behind them.
 
-- **`ewf`**: a forecasting tool. Describe a PV plant (location, size, orientation) and get a 15-minute AC power forecast for the next days from the latest ECMWF IFS, ECMWF AIFS and NOAA GFS runs, as CSV, JSON and an HTML report, on the command line or in a web app.
+- **`ewf`**: a forecasting tool. Describe a PV plant (location, size, orientation) and get a 15-minute AC power forecast for the next days from the latest ECMWF IFS, ECMWF AIFS and NOAA GFS runs, as CSV, JSON and an HTML report, on the command line or in a web dashboard.
 - **Research**: papers with their data and code, see [`research/`](research/README.md).
 
 ## Forecast a PV plant
@@ -46,13 +46,42 @@ Useful options: `--hours 120` (horizon from now, up to about 240), `--models ifs
 
 `ewf runs` shows which model runs are currently available.
 
-### Web app
+### Web dashboard
+
+![Dashboard, light mode](docs/img/dashboard-light.png)
+
+Install the web extras, build the front end once (needs Node.js 20 or newer), and start the server:
 
 ```bash
-streamlit run app/streamlit_app.py
+pip install -e ".[web]"
 ```
 
-Enter the plant in the sidebar (or load a plant file), press **Run forecast**, and download CSV, HTML or everything as a zip.
+```bash
+cd web && npm install && npm run build && cd ..
+```
+
+```bash
+ewf serve
+```
+
+Open http://127.0.0.1:8000. The plant is set up in a four-step wizard (location on a map, modules and orientation, inverter and limits, horizon and models) or loaded from a plant file; it is kept in the browser. `Ctrl K` opens the command palette.
+
+| Part | What it shows |
+|---|---|
+| Headline tiles | Energy today, tomorrow and the day after (with the range between models), peak power; tomorrow's change against the previous model runs |
+| AC power forecast | 15-minute power per model and the blend, the model range, the AC or export limit, clipped periods, night, "now"; day filter; models switch on and off |
+| Energy per day | Total per day, scrubbable power curve, each model's energy and its difference to the blend |
+| When the energy comes | Heat map of days by quarter-hours |
+| Status | Events worth a look: models left out, old runs, days where models disagree by more than 35 %, clipping, jumps against the previous run |
+| Maintenance windows | Daylight stops of 1, 2, 4 or 8 h that lose the least energy, with the worst case over models |
+| Run-to-run changes | Energy for one day from each model run seen so far; "Load previous runs" fetches the runs before the latest |
+| Weather | Irradiance per model against the clear sky, cloud cover, air and module temperature, wind |
+| Forecast vs actuals | Drop a CSV of measured power: MAE, RMSE, bias and energy per model for the overlapping daylight periods |
+| Model runs and downloads | Runs used, their age and source; CSV, JSON, HTML and zip downloads |
+
+For front-end development run `ewf serve` and, in `web/`, `npm run dev` (port 5173, `/api` is proxied).
+
+The earlier Streamlit app still works as a simple alternative: `pip install -e ".[app]"` and `streamlit run app/streamlit_app.py`.
 
 ### From Python
 
@@ -84,7 +113,7 @@ result.daily_energy("Leipzig")   # kWh per local day
 | ECMWF IFS, ECMWF AIFS Single | ECMWF open data | CC-BY-4.0, attribution "© ECMWF" (included in every output) |
 | NOAA GFS | NOAA Open Data Dissemination | public domain |
 
-All sources allow commercial use. The free Open-Meteo API (non-commercial only) is not used.
+All sources allow commercial use. The free Open-Meteo API (non-commercial only) is not used. The dashboard map loads tiles from OpenStreetMap (© OpenStreetMap contributors, ODbL; light use under the OSMF tile policy). Dashboard components are adapted from EasyUI (MIT), see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ### Tests
 
@@ -117,9 +146,17 @@ energy-weather-forecasting/
 │   ├── resample.py        model steps to 15-minute periods
 │   ├── pv.py              PV physics (pvlib chain)
 │   ├── forecast.py        orchestration, blend, daily energy
+│   ├── insights.py        maintenance windows, clipping
+│   ├── verify.py          forecast vs measured power
+│   ├── history.py         log of past runs (run-to-run changes)
 │   ├── report.py          CSV, JSON and HTML outputs
-│   └── cli.py             `ewf` command
-├── app/streamlit_app.py   web app
+│   ├── api.py             HTTP API for the dashboard (FastAPI)
+│   └── cli.py             `ewf` command (`forecast`, `runs`, `serve`)
+├── web/                   dashboard (React, TypeScript, Tailwind, framer-motion)
+├── design/reference/      EasyUI component code collected as reference
+├── docs/img/              screenshots
+├── THIRD_PARTY_NOTICES.md licences of reused code
+├── app/streamlit_app.py   simple Streamlit app
 ├── .streamlit/            app theme in the house palette
 ├── plants/                example plant files
 ├── tests/                 unit tests and one live test

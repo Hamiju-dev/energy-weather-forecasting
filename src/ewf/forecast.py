@@ -116,12 +116,28 @@ def get_point_forecasts(mr: ModelRun, plants: list[Plant], use_cache: bool = Tru
 
 
 # ---------------------------------------------------------------- main entry point
+def latest_runs(models=DEFAULT_MODELS, hours: int = 72, now: pd.Timestamp | None = None) -> dict[str, ModelRun]:
+    """Latest available run of each model that reaches ``hours`` ahead (only index lookups, no downloads)."""
+    now = (now or pd.Timestamp.now(tz="UTC"))
+    until = required_until(now, hours)
+    out = {}
+    for key in models:
+        try:
+            out[key] = find_run(MODELS[key], until, now)
+        except Exception:  # a missing model is reported by run_forecast
+            continue
+    return out
+
+
 def run_forecast(plants: list[Plant], hours: int = 72, models=DEFAULT_MODELS, now: pd.Timestamp | None = None,
-                 use_cache: bool = True, progress: Callable[[str], None] | None = None) -> ForecastResult:
+                 use_cache: bool = True, progress: Callable[[str], None] | None = None,
+                 run_before: dict[str, pd.Timestamp] | None = None) -> ForecastResult:
     """Forecast 15-minute AC power for each plant from the latest model runs.
 
     The window starts at the most recent run time among the models used and
-    ends ``hours`` after the current hour.
+    ends ``hours`` after the current hour. ``run_before`` maps a model to a run
+    time; that model then uses the latest run before it (for run-to-run
+    comparisons).
     """
     say = progress or (lambda msg: None)
     now = (now or pd.Timestamp.now(tz="UTC"))
@@ -131,7 +147,8 @@ def run_forecast(plants: list[Plant], hours: int = 72, models=DEFAULT_MODELS, no
         spec = MODELS[key]
         say(f"Looking for the latest {spec.label} run...")
         try:
-            runs[key] = find_run(spec, until, now)
+            before = (run_before or {}).get(key)
+            runs[key] = find_run(spec, until, now if before is None else before - pd.Timedelta(hours=1))
             say(f"{spec.label}: run {runs[key].run:%Y-%m-%d %H} UTC, steps up to {runs[key].steps[-1]} h")
         except Exception as exc:  # keep the other models
             problems.append(f"{spec.label}: {exc}")

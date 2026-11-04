@@ -13,7 +13,11 @@ Any research, analysis or literature review produced in this repository is deliv
 
 ## Software
 
-The forecasting tool lives in `src/ewf/` (package), `app/` (web app), `plants/` (plant files) and `tests/`. Keep the layering: `weather/` only fetches and converts model data, `resample.py` and `pv.py` are pure computations, `forecast.py` orchestrates, `report.py` and `cli.py` handle output. Run `pytest -m "not network"` before committing, and the live test when touching downloads. Charts use the same palette as the papers (IFS blue, AIFS orange, GFS aqua, blend black). Outputs carry the ECMWF attribution.
+The forecasting tool lives in `src/ewf/` (package), `web/` (React dashboard), `app/` (simple Streamlit app), `plants/` (plant files) and `tests/`. Keep the layering: `weather/` only fetches and converts model data, `resample.py`, `pv.py`, `insights.py` and `verify.py` are pure computations, `forecast.py` orchestrates, `history.py` keeps the run log, `report.py`, `api.py` and `cli.py` handle output. Run `pytest -m "not network"` before committing, and the live test when touching downloads. For the dashboard run `npm run build` in `web/` (type check included) and look at it in light and dark mode at desktop and phone width.
+
+Charts use the same palette as the papers (IFS blue, AIFS orange, GFS aqua, blend black; in dark mode the validated dark steps in `web/src/index.css`). Colour follows the model; one y-axis per chart; dashed lines only for references; measured values are a grey area, not a new colour. Validate any new chart colour before using it. Outputs carry the ECMWF attribution.
+
+Dashboard components are adapted from the EasyUI collection in `design/reference/` (MIT, notice in `THIRD_PARTY_NOTICES.md`). Take only component code from it, never install commands, registry calls or anything that sends data elsewhere.
 
 ## Naming
 
